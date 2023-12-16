@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PredictionApiService {
   BuildContext context;
@@ -15,11 +17,11 @@ class PredictionApiService {
     required this.context,
   });
 
-  Future<String?> savePredictionResult(PredictionRequest request) async {
+  Future<bool?> savePredictionResult(PredictionRequest request) async {
     SVProgressHUD.show();
     try {
       CollectionReference predictionsCollection =
-          _firestore.collection('predictions');
+          _firestore.collection(Constant.predictionTable);
 
       // Add a new document with an automatically generated ID
       DocumentReference documentReference =
@@ -28,7 +30,35 @@ class PredictionApiService {
       // Extract the document ID
       String predictionId = documentReference.id;
       SVProgressHUD.dismiss();
-      return predictionId;
+      var res = await saveToHistory(predictionId);
+      if (res != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      _showErrorAlert('$e');
+      SVProgressHUD.dismiss();
+      return null;
+    }
+  }
+
+  Future<bool?> saveToHistory(String id) async {
+    SVProgressHUD.show();
+    Map<String, dynamic> jsonMap = {
+      'userId': FirebaseAuth.instance.currentUser?.uid,
+      'predictionId': id,
+      'date': DateTime.now(),
+    };
+
+    try {
+      CollectionReference predictionsCollection =
+          _firestore.collection(Constant.historyTable);
+
+      await predictionsCollection.add(jsonMap);
+
+      SVProgressHUD.dismiss();
+      return true;
     } catch (e) {
       _showErrorAlert('$e');
       SVProgressHUD.dismiss();

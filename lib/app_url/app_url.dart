@@ -1,5 +1,3 @@
-class BaseUrl {}
-
 class Constant {
   //test
   static String clientId = '';
@@ -11,6 +9,8 @@ class Constant {
   static String defaultProfileImage = "default_profile.jpg";
 
   static double bottomPadding = 100.0;
-}
 
-class AppURl {}
+  static String userTable = 'users';
+  static String predictionTable = 'prediction';
+  static String historyTable = 'history';
+}

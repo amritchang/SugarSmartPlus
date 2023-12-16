@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/modules/signup/signup/signup_request.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,7 +29,7 @@ class SignUpApiService {
 
       // Save  user details to Firestore
       await _firestore
-          .collection('users')
+          .collection(Constant.userTable)
           .doc(userCredential.user!.uid)
           .set(request.toJson());
       SVProgressHUD.dismiss();
