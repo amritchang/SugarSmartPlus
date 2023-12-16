@@ -15,7 +15,7 @@ class UserProfileView extends StatefulWidget {
 }
 
 class _UserProfileViewState extends State<UserProfileView> {
-  User user = User();
+  UserModel user = UserModel();
 
   @override
   void initState() {

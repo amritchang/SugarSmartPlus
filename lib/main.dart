@@ -6,9 +6,14 @@ import 'package:sugar_smart_assist/modules/onboarding/onboarding.dart';
 import 'package:sugar_smart_assist/storage/storage.dart';
 import 'package:sugar_smart_assist/modules/signup/signup_option.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   await Storage.initContainer();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   FlutterNativeSplash.remove();
   runApp(MyApp());
 }

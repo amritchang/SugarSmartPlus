@@ -21,7 +21,7 @@ class DashboardAppNavBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _DashboardAppNavBarState extends State<DashboardAppNavBar> {
-  late User user = User();
+  late UserModel user = UserModel();
 
   @override
   void initState() {

@@ -58,6 +58,7 @@ showAlertDialogWithOk(
     child: Text(AppLocalizations.of(context)!.okButton),
     onPressed: () {
       if (onOkPressed != null) {
+        Navigator.of(context).pop();
         onOkPressed();
       } else {
         Navigator.of(context).pop();

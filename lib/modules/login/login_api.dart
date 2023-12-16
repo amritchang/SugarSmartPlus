@@ -1,48 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:sugar_smart_assist/app_url/app_url.dart';
-import 'package:sugar_smart_assist/models/user.dart';
-import 'package:sugar_smart_assist/network_helper/api_response.dart';
-import 'package:sugar_smart_assist/network_helper/api_service.dart';
-import 'package:sugar_smart_assist/constants/response_message_constant.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sugar_smart_assist/storage/storage.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sugar_smart_assist/models/user.dart';
 
 class LoginApiService {
   BuildContext context;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Constructor
   LoginApiService({
     required this.context,
   });
 
+  // Login function
   Future<bool?> login(String username, String password) async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var usernameWithCountryCode = !isMobileNumber(username)
-        ? username
-        : (Storage().selectedCountryCode + username);
-    ;
-
-    var response = await ApiService().apiPostRequest('', null, true);
-    if (response != null) {
-      var jsonResponse = APIResponse.fromJson(response);
-      if (jsonResponse.accessToken != '' && jsonResponse.refreshToken != '') {
-        Storage().setAuthToken(
-            '${jsonResponse.tokenType} ${jsonResponse.accessToken}');
-        Storage().setRefreshToken(jsonResponse.refreshToken);
-        if (Storage().userLoginMobileNumber != username) {
-          Storage().removeBiometricLoginDetail();
+    SVProgressHUD.show();
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: username,
+        password: password,
+      );
+      if (userCredential.user != null) {
+        var userInfo = await getUserInformation(userCredential.user!.uid);
+        SVProgressHUD.dismiss();
+        if (userInfo != null) {
+          return true;
         }
-        Storage().userLoginMobileNumber = username;
-        Storage().userLoginPassword = password;
-        Storage().setIsUserLoggedIn(true);
-        return true;
-      } else {
-        _showErrorAlert(jsonResponse.errorDescription);
       }
       return null;
-    } else {
+    } catch (e) {
+      _showErrorAlert('$e');
+      SVProgressHUD.dismiss();
+      return null;
+    }
+  }
+
+  Future<bool?> getUserInformation(String uid) async {
+    SVProgressHUD.show();
+    try {
+      DocumentSnapshot userSnapshot =
+          await _firestore.collection('users').doc(uid).get();
+      if (userSnapshot.exists) {
+        // User found, you can access user data
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        Storage().saveUser(UserModel.fromJson(userData));
+        SVProgressHUD.dismiss();
+        return true;
+      } else {
+        SVProgressHUD.dismiss();
+        return null;
+      }
+    } catch (e) {
+      _showErrorAlert('$e');
+      SVProgressHUD.dismiss();
       return null;
     }
   }
@@ -50,14 +66,5 @@ class LoginApiService {
   void _showErrorAlert(String message) {
     showAlertDialogWithOk(
         AppLocalizations.of(context)!.errorText, message, context);
-  }
-
-  bool isMobileNumber(String username) {
-    // Adjust the regular expression as needed based on your specific requirements
-    RegExp mobileNumberRegex = RegExp(
-      r"^[0-9]{9,15}$",
-    );
-
-    return mobileNumberRegex.hasMatch(username);
   }
 }

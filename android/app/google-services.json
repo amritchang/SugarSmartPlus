@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1081049588204",
+    "project_id": "sugar-smart-assist",
+    "storage_bucket": "sugar-smart-assist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081049588204:android:af67b95344f247652660c9",
+        "android_client_info": {
+          "package_name": "com.example.sugar_smart_assist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_BS7A24xIX-ULJIOgegmzPPtpGckJFVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

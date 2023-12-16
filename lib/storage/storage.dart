@@ -101,17 +101,17 @@ class Storage extends GetxController {
     return GetStorage(StorageKey.refreshToken).read(StorageKey.refreshToken);
   }
 
-  void saveUser(User user) {
+  void saveUser(UserModel user) {
     final json = user.toJson();
     GetStorage(StorageKey.userProfileDetail)
         .write(StorageKey.userProfileDetail, json);
   }
 
-  Future<User?> getUser() async {
+  Future<UserModel?> getUser() async {
     var res = await GetStorage(StorageKey.userProfileDetail)
         .read(StorageKey.userProfileDetail);
     if (res != null) {
-      return User.fromJson(res);
+      return UserModel.fromJson(res);
     }
     return null;
   }

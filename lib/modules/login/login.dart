@@ -197,12 +197,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     visible: true,
                                     child: AppButton(
                                       title: AppLocalizations.of(context)!
-                                          .continueWithGoogleButton,
-                                      onPressed: () {},
+                                          .signUpWithEmailButton,
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context, AppRouter().start(signUp));
+                                      },
                                       titleColor: AppColors.textGreyColor,
                                       backgroundColor: AppColors.themeWhite,
                                       borderColor: AppColors.primaryColor,
-                                      iconName: 'google.png',
+                                      iconName: 'profile.png',
                                     ),
                                   ),
                                   Visibility(

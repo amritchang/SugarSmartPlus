@@ -51,7 +51,21 @@ class _SignUpcreenState extends State<SignUpcreen> {
     }
   }
 
-  Future _signUp() async {}
+  Future _signUp() async {
+    var res = await apiService.registerUser(request);
+    if (res != null) {
+      showAlertDialogWithOk(
+          AppLocalizations.of(getContext())!.successfulRegistrationAlertTitle,
+          AppLocalizations.of(getContext())!.successfulRegistrationAlertMessage,
+          getContext(), onOkPressed: () {
+        Navigator.of(getContext()).pop();
+      });
+    }
+  }
+
+  BuildContext getContext() {
+    return context;
+  }
 
   void _setConfirmPasswordCheckvalue(text) {
     setState(() {

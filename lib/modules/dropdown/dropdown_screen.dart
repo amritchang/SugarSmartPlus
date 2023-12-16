@@ -13,7 +13,7 @@ class DropDownScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TitleNavBar(
-        title: arguments.title ?? arguments.getTitle(),
+        title: arguments.title ?? '',
         bgColor: AppColors.themeWhite,
         tintColor: AppColors.themeBlack,
       ),

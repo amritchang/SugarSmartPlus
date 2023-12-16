@@ -27,9 +27,7 @@ class SignUpRequest {
       'gender': gender,
       'email': email,
       'mobileNumber': Storage().selectedCountryCode + mobileNumber,
-      'password': password,
       'dob': dob,
-      'repassword': repassword,
     };
 
     return jsonMap;

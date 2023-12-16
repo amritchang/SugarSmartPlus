@@ -1,4 +1,3 @@
-import 'package:sugar_smart_assist/models/service.dart';
 import 'package:sugar_smart_assist/app_url/app_url.dart';
 
 enum MenuType {
@@ -22,7 +21,6 @@ class Menu {
   String? menuIcon;
   String? menuDesc;
   MenuType? menuType;
-  Service? service;
   String? defaultMenuIcon;
 
   Menu({
@@ -31,7 +29,6 @@ class Menu {
     this.menuIcon,
     this.menuDesc,
     this.menuType,
-    this.service,
     String? defaultMenuIcon,
   }) : defaultMenuIcon = defaultMenuIcon ?? Constant.defaultPaymentImage;
 }

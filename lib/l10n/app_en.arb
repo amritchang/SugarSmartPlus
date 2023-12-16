@@ -34,10 +34,12 @@
     "promoCodeText": "Promo Code",
     "inviteCodeText": "Invite Code",
     "usePromoCodeText": "Use Promo Code",
-    "agreeTermsandConditionText": "By creating an account, I agree to SeeTek’s",
+    "agreeTermsandConditionText": "By creating an account, I agree to the",
     "andText": "and",
     "termsOfServiceText": "Terms of Service",
     "privacyPolictText": "Privacy Policy",
+    "successfulRegistrationAlertTitle": "Registration Successful",
+    "successfulRegistrationAlertMessage": "You are successfully registered to Sugar Smart Assist. Please login to continue.",
 
     "selectLanguageText": "Select Language",
 

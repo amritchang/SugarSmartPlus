@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sugar_smart_assist/models/key_value.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sugar_smart_assist/network_helper/api_service.dart';
 
 enum DropDownType { none }
 
@@ -19,15 +18,4 @@ class DropdownScreenArguments {
     this.textEditingController,
     this.onItemSelected,
   );
-
-  String getTitle() {
-    var context = getTopContext();
-    if (context != null) {
-      switch (type) {
-        case DropDownType.none:
-          return '';
-      }
-    }
-    return '';
-  }
 }

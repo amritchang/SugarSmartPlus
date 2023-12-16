@@ -15,6 +15,7 @@ import 'package:sugar_smart_assist/custom_views/shadow.dart';
 import 'package:sugar_smart_assist/custom_views/button/app_button.dart';
 import 'package:sugar_smart_assist/custom_views/profile/user_profile_view.dart';
 import 'package:sugar_smart_assist/storage/storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -105,8 +106,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _triggerLogOutApi() async {
-    Storage().deleteAll();
-    _navigateToLoginScreen();
+    try {
+      await FirebaseAuth.instance.signOut();
+      Storage().deleteAll();
+      _navigateToLoginScreen();
+    } catch (e) {
+      showAlertDialogWithOk(
+          AppLocalizations.of(getContext())!.errorText, '$e', getContext());
+    }
+  }
+
+  BuildContext getContext() {
+    return context;
   }
 
   void _navigateToLoginScreen() {
@@ -139,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(
-            height: (80 * listCount).toDouble(),
+            height: (92 * listCount).toDouble(),
             child: _buildList(),
           ),
           Padding(

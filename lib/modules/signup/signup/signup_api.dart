@@ -1,34 +1,41 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:sugar_smart_assist/app_url/app_url.dart';
+import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:sugar_smart_assist/modules/signup/signup/signup_request.dart';
-import 'package:sugar_smart_assist/network_helper/api_response.dart';
-import 'package:sugar_smart_assist/network_helper/api_service.dart';
-import 'package:sugar_smart_assist/constants/response_message_constant.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpApiService {
   BuildContext context;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Constructor
   SignUpApiService({
     required this.context,
   });
 
-  Future<bool?> signUp(SignUpRequest request) async {
-    var response = await ApiService()
-        .apiPostRequest('', json.encode(request.toJson()), true);
+  Future<bool?> registerUser(SignUpRequest request) async {
+    SVProgressHUD.show();
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: request.email,
+        password: request.password,
+      );
 
-    if (response != null) {
-      var jsonResponse = APIResponse.fromJson(response);
-      if (jsonResponse.responseStatus == ResponseStatusConstant.success) {
-        return true;
-      } else {
-        _showErrorAlert(jsonResponse.message);
-      }
-      return null;
-    } else {
+      // Save  user details to Firestore
+      await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set(request.toJson());
+      SVProgressHUD.dismiss();
+      return true;
+    } catch (e) {
+      _showErrorAlert('$e');
+      SVProgressHUD.dismiss();
       return null;
     }
   }

@@ -50,6 +50,9 @@ dependencies:
   country_code_picker: ^3.0.0
   cached_network_image: ^3.3.0
   local_auth: ^2.1.7
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
 
 
   # The following adds the Cupertino Icons font to your application.
