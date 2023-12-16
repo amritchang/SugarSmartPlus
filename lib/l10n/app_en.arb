@@ -124,5 +124,16 @@
     "goBackToDashboardText": "Go back to Dashboard",
     "userDeletedText": "User Deletion Successful",
     "oldPasswordMismatched": "Old Password doesn't match",
-    "passwordChangedSuccess": "Password changed Successfully"
+    "passwordChangedSuccess": "Password changed Successfully",
+    "pregnanciesText": "Pregnancies",
+    "glucoseText": "Glucose",
+    "bloodPressureText": "Blood Pressure",
+    "skinnThicknessText": "SkinThickness",
+    "insulinText": "Insulin",
+    "bmiText": "BMI",
+    "ageText": "Age",
+    "outcomeText": "Outcome",
+    "predictionScreenTitle": "Prediction",
+    "predictionScreenDesc": "Enter detail to make a prediction",
+    "predictButtonText": "Predict"
 }

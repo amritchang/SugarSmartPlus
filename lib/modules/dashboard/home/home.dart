@@ -78,16 +78,6 @@ class _HomeScreenScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody() {
-    if (_isLoading) {
-      return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Column(
-          children: [
-            const DashboardSkeleton(),
-          ].withSpaceBetween(height: 24),
-        ),
-      );
-    }
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 0, 20,
           0), // if padding is changed, please change width of container in DashboardMainMenuView, _mainMenu

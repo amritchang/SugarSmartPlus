@@ -137,9 +137,11 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
               bottom: 10.0,
               right: 16.0,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(AppRouter().start(prediction));
+                },
                 backgroundColor: AppColors.primaryColor,
-                child: const Icon(Icons.filter_list),
+                child: const Icon(Icons.add),
               ),
             ),
           ],
@@ -223,11 +225,11 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                                       size: 16)),
                             ].withSpaceBetween(width: 8.0),
                           )),
-                      recentTransaction(transaction, false),
+                      recentPrediction(transaction, false),
                     ],
                   );
                 } else {
-                  return recentTransaction(transaction, false);
+                  return recentPrediction(transaction, false);
                 }
               },
               separatorBuilder: (context, index) {
@@ -237,7 +239,7 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
     );
   }
 
-  Widget recentTransaction(PredictionHistoryResponse model, bool hideBorder) {
+  Widget recentPrediction(PredictionHistoryResponse model, bool hideBorder) {
     return GestureDetector(
       onTap: () {},
       child: Container(
