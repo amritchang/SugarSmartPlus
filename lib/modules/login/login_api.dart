@@ -18,7 +18,8 @@ class LoginApiService {
   });
 
   // Login function
-  Future<bool?> login(String username, String password) async {
+  Future<bool?> login(String username, String password,
+      [bool doOnlyLogin = false]) async {
     SVProgressHUD.show();
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -26,17 +27,28 @@ class LoginApiService {
         password: password,
       );
       if (userCredential.user != null) {
-        var userInfo = await getUserInformation(userCredential.user!.uid);
-        SVProgressHUD.dismiss();
-        if (userInfo != null) {
+        if (doOnlyLogin) {
+          Storage().setIsUserLoggedIn(true);
           return true;
+        } else {
+          var userInfo = await getUserInformation(userCredential.user!.uid);
+          SVProgressHUD.dismiss();
+          if (userInfo != null) {
+            Storage().setIsUserLoggedIn(true);
+            return true;
+          }
         }
       }
       return null;
-    } catch (e) {
-      _showErrorAlert('$e');
-      SVProgressHUD.dismiss();
-      return null;
+    } on FirebaseException catch (e) {
+      if (doOnlyLogin) {
+        SVProgressHUD.dismiss();
+        return null;
+      } else {
+        _showErrorAlert(e.code);
+        SVProgressHUD.dismiss();
+        return null;
+      }
     }
   }
 

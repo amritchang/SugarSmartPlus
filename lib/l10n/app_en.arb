@@ -121,5 +121,8 @@
     "successAuthenticationText": "Successfully Authenticated",
     "authenticateToSavePasswordText": "Please authenticate to save password",
     "authenticateToLoginText": "Please authenticate to login",
-    "goBackToDashboardText": "Go back to Dashboard"
+    "goBackToDashboardText": "Go back to Dashboard",
+    "userDeletedText": "User Deletion Successful",
+    "oldPasswordMismatched": "Old Password doesn't match",
+    "passwordChangedSuccess": "Password changed Successfully"
 }

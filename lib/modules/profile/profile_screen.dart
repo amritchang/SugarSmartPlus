@@ -77,8 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AppLocalizations.of(context)!.cancelButton,
             AppLocalizations.of(context)!.confirmButton,
             context,
-            onLeftPressed: () {},
-            onRightPressed: () {});
+            onLeftPressed: () {}, onRightPressed: () {
+          Navigator.push(context, AppRouter().start(changePassword));
+        });
       case MenuType.deleteUser:
         showAlertDialogWithTwoButtons(
             AppLocalizations.of(context)!.deleteAccountAlertTitle,
@@ -86,11 +87,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AppLocalizations.of(context)!.cancelButton,
             AppLocalizations.of(context)!.deleteUserText,
             context,
-            onLeftPressed: () {},
-            onRightPressed: () {});
+            onLeftPressed: () {}, onRightPressed: () {
+          _deleteUser();
+        });
       default:
         break;
     }
+  }
+
+  void _deleteUser() async {
+    var res = await apiService.deleteUserFromFirestore();
+    if (res != null) {
+      showAlertDialogWithOk(
+          AppLocalizations.of(getContext())!.successText,
+          AppLocalizations.of(getContext())!.userDeletedText,
+          getContext(), onOkPressed: () {
+        Storage().deleteAll();
+        _navigateToLoginScreen();
+      });
+    }
+  }
+
+  BuildContext getContext() {
+    return context;
   }
 
   void _logout() async {
@@ -114,10 +133,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       showAlertDialogWithOk(
           AppLocalizations.of(getContext())!.errorText, '$e', getContext());
     }
-  }
-
-  BuildContext getContext() {
-    return context;
   }
 
   void _navigateToLoginScreen() {

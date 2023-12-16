@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:sugar_smart_assist/modules/change_password/change_passwrord.dart';
 import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen.dart';
 import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments.dart';
 import 'package:sugar_smart_assist/modules/dropdown/dropdown_screen.dart';
@@ -31,6 +32,7 @@ const String detailScreen = '/detail';
 const String dropdown = '/dropdown';
 const String history = '/history';
 const String changeLanguage = '/changeLanguage';
+const String changePassword = '/change/password';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -100,6 +102,8 @@ class AppRouter {
         return DropDownScreen(arguments: arguments as DropdownScreenArguments);
       case history:
         return const PredictionHistoryScreen();
+      case changePassword:
+        return const ChangePasswordScreen();
       default:
         break;
     }
