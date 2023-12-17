@@ -100,7 +100,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
           value: request.bmi),
       KeyValue(
           key: AppLocalizations.of(context)!.outcomeText,
-          value: request.outcome == '1' ? 'Positive' : 'Negative'),
+          value: (request.outcome == '1.0' || request.outcome == '1')
+              ? 'Negative'
+              : 'Positive'),
     ];
 
     final args = ConfirmScreenArguments(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,7 +23,29 @@ class ProfileApiService {
       var uid = FirebaseAuth.instance.currentUser?.uid;
       // Reference to the 'users' collection in Firestore
       CollectionReference usersCollection =
-          FirebaseFirestore.instance.collection('users');
+          FirebaseFirestore.instance.collection(Constant.userTable);
+
+      QuerySnapshot querySnapshotPrediction = await FirebaseFirestore.instance
+          .collection(Constant.predictionTable)
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      for (QueryDocumentSnapshot documentSnapshot
+          in querySnapshotPrediction.docs) {
+        // Delete each document
+        await documentSnapshot.reference.delete();
+      }
+
+      QuerySnapshot querySnapshotHistory = await FirebaseFirestore.instance
+          .collection(Constant.historyTable)
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      for (QueryDocumentSnapshot documentSnapshot
+          in querySnapshotHistory.docs) {
+        // Delete each document
+        await documentSnapshot.reference.delete();
+      }
 
       // Delete the document with the specified UID
       await usersCollection.doc(uid).delete();

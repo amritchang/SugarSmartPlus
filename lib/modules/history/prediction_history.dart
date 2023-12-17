@@ -11,9 +11,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:sugar_smart_assist/custom_views/skeleton/dashboard_skeleton.dart';
 import 'package:sugar_smart_assist/helper/string_extension.dart';
+import 'package:sugar_smart_assist/models/key_value.dart';
 import 'package:sugar_smart_assist/modules/history/prediction_history_api.dart';
 import 'package:sugar_smart_assist/modules/history/prediction_history_response.dart';
-import 'package:intl/intl.dart';
+import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments.dart';
 
 class PredictionHistoryScreen extends StatefulWidget {
   const PredictionHistoryScreen({Key? key}) : super(key: key);
@@ -73,6 +74,53 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
       _isLoading = true;
     });
     _simulateLoad(isRefreshControl: true);
+  }
+
+  void _navigateToDetailScreen(PredictionHistoryResponse model) {
+    var request = model.prediction;
+    if (request != null) {
+      List<KeyValue> data = [
+        KeyValue(
+            key: AppLocalizations.of(context)!.ageText, value: request.age),
+        KeyValue(
+            key: AppLocalizations.of(context)!.genderText,
+            value: request.gender),
+        KeyValue(
+            key: AppLocalizations.of(context)!.pregnanciesText,
+            value: request.pregnancies),
+        KeyValue(
+            key: '${AppLocalizations.of(context)!.glucoseText} (mg/dL)',
+            value: request.glucose),
+        KeyValue(
+            key: '${AppLocalizations.of(context)!.bloodPressureText} (mmHg)',
+            value: request.bloodpressure),
+        KeyValue(
+            key: AppLocalizations.of(context)!.skinnThicknessText,
+            value: request.skinthickness),
+        KeyValue(
+            key: '${AppLocalizations.of(context)!.insulinText} (IU/mL)',
+            value: request.insulin),
+        KeyValue(
+            key: '${AppLocalizations.of(context)!.bmiText} (kg/m^2)',
+            value: request.bmi),
+        KeyValue(
+            key: AppLocalizations.of(context)!.outcomeText,
+            value: (request.outcome == '1.0' || request.outcome == '1')
+                ? 'Negative'
+                : 'Positive'),
+      ];
+
+      final args = ConfirmScreenArguments(
+        AppLocalizations.of(context)!.predictionScreenTitle,
+        data
+            .where((item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
+            .toList(),
+        model.predictionId ?? '',
+        request.outcome,
+        ConfirmScreenType.none,
+      );
+      Navigator.push(context, AppRouter().start(confirmScreen, args));
+    }
   }
 
   @override
@@ -194,7 +242,11 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
 
   Widget recentPrediction(PredictionHistoryResponse model, bool hideBorder) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (model.prediction != null) {
+          _navigateToDetailScreen(model);
+        }
+      },
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Row(
@@ -202,10 +254,14 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             getIconWithSize(
-                model.prediction?.outcome == "1.0" ? 'close.png' : 'check.png',
+                (model.prediction?.outcome == "1.0" ||
+                        model.prediction?.outcome == "1")
+                    ? 'close.png'
+                    : 'check.png',
                 40,
                 40,
-                backgroundColor: model.prediction?.outcome == "1.0"
+                backgroundColor: (model.prediction?.outcome == "1.0" ||
+                        model.prediction?.outcome == "1")
                     ? AppColors.failureColor
                     : AppColors.successColor,
                 cornerRadius: 5.0),
@@ -224,7 +280,7 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                             color: AppColors.textBlackColor),
                       ),
                       Text(
-                        '${AppLocalizations.of(context)!.outcomeText}: ${model.prediction?.outcome == "1.0" ? "Negative" : "Positive"}',
+                        '${AppLocalizations.of(context)!.outcomeText}: ${(model.prediction?.outcome == "1.0" || model.prediction?.outcome == "1") ? "Negative" : "Positive"}',
                         style: AppFonts.bodyTextStyle(
                             color: AppColors.textGreyColor),
                       ),

@@ -76,7 +76,7 @@
     "logoutAlertTitle": "Log Out",
     "logoutAlertDesc": "Are you sure you want to logout?",
     "deleteAccountAlertTitle": "Delete Account",
-    "deleteAccountAlertDesc": "Are you sure you want to delete the account?",
+    "deleteAccountAlertDesc": "Are you sure you want to delete the account? All the data related to this account will be deleted.",
     "currentPasswordText": "Current Password",
     "newPasswordText": "New Password",
     "confirmNewPasswordText": "Confirm New Password",

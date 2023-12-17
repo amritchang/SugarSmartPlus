@@ -39,7 +39,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           title: widget.arguments.title.capitalize ?? '',
           bgColor: AppColors.primaryBackgroundColor,
           tintColor: AppColors.themeBlack,
-          shouldShowBackButton: false),
+          shouldShowBackButton:
+              widget.arguments.type == ConfirmScreenType.none),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
