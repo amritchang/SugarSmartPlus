@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sugar_smart_assist/app_router/app_router.dart';
 import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/custom_views/empty_list_view.dart';
-import 'package:sugar_smart_assist/models/key_value.dart';
-import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments.dart';
 import 'package:sugar_smart_assist/custom_views/navbar/dashboard_navbar.dart';
 import 'package:sugar_smart_assist/extension/image_extension.dart';
 import 'package:sugar_smart_assist/helper/app_color_helper.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:sugar_smart_assist/custom_views/skeleton/dashboard_skeleton.dart';
 import 'package:sugar_smart_assist/helper/string_extension.dart';
 import 'package:sugar_smart_assist/modules/history/prediction_history_api.dart';
-import 'package:sugar_smart_assist/modules/history/prediction_history_request.dart';
 import 'package:sugar_smart_assist/modules/history/prediction_history_response.dart';
 import 'package:intl/intl.dart';
 
@@ -27,27 +24,17 @@ class PredictionHistoryScreen extends StatefulWidget {
 
 class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
   late PredictionnHistoryApiService apiService;
-  late PredictionHistoryRequest request;
   var _isLoading = true, _isLoadingMore = false, _isInit = false;
   List<PredictionHistoryResponse> _data = [];
   late bool _isLastPage;
-  late int _pageNumber;
   late ScrollController _scrollController;
-  final int _numberOfPostsPerRequest = 10;
-  late bool _isFetching;
 
   @override
   void initState() {
     super.initState();
     apiService = PredictionnHistoryApiService(context: context);
-    request = PredictionHistoryRequest();
-    request.startingDate = DateFormat(DateFormatType.yearMonthDayDashed.pattern)
-        .format(DateTime.now().subtract(const Duration(days: 90)));
-    request.endingDate = DateFormat(DateFormatType.yearMonthDayDashed.pattern)
-        .format(DateTime.now());
-    _pageNumber = 1;
+
     _isLastPage = false;
-    _isFetching = false;
     _scrollController = ScrollController();
 
     if (!_isInit) {
@@ -65,14 +52,11 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
   Future _simulateLoad({bool isRefreshControl = false}) async {
     _data = [];
     if (_data.isEmpty) {
-      _pageNumber = 1;
-      request.page = _pageNumber;
-      var res = await apiService.getTransactions(request);
+      var res = await apiService.getHistory();
       if (res != null && mounted) {
         setState(() {
           _isLoading = false;
           _data = res;
-          _pageNumber++;
         });
       }
     } else {
@@ -82,30 +66,6 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
         });
       }
     }
-  }
-
-  void _loadMoreData() {
-    if (_isFetching) {
-      return;
-    }
-    request.page = _pageNumber;
-    _isFetching = true;
-    apiService.getTransactions(request).then((res) {
-      if (res != null) {
-        setState(() {
-          _data = res;
-          _isLastPage = res.length < _numberOfPostsPerRequest;
-          _isLoadingMore = false;
-          _pageNumber++;
-        });
-        _isFetching = false;
-      } else {
-        setState(() {
-          _isLoadingMore = false;
-        });
-        _isFetching = false;
-      }
-    });
   }
 
   Future<void> _refresh() async {
@@ -123,7 +83,6 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
         setState(() {
           _isLoadingMore = true;
         });
-        _loadMoreData();
       }
     });
     return Scaffold(
@@ -175,26 +134,21 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
               padding: const EdgeInsets.fromLTRB(24, 5, 24, 5),
               itemBuilder: (context, index) {
                 if (index == _data.length) {
-                  return _isLoadingMore
-                      ? const Center(
-                          child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: CircularProgressIndicator(),
-                        ))
-                      : null;
+                  return null;
                 }
                 final transaction = _data[index];
                 final previousTransaction = index > 0 ? _data[index - 1] : null;
 
                 final isNewDate = previousTransaction == null ||
                     formatDate(
-                            transaction.date ?? '',
-                            DateFormatType.yearMonthDayDashedCommaTime,
+                            '${transaction.date?.toDate()}',
+                            DateFormatType.deviceFormat,
                             DateFormatType.monthNameDayCommaYear) !=
                         formatDate(
-                            previousTransaction.date ?? '',
-                            DateFormatType.yearMonthDayDashedCommaTime,
+                            '${previousTransaction.date?.toDate()}',
+                            DateFormatType.deviceFormat,
                             DateFormatType.monthNameDayCommaYear);
+                ;
 
                 if (isNewDate) {
                   return Column(
@@ -208,17 +162,16 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                             children: [
                               Text(
                                 formatDate(
-                                    transaction.date ?? '',
-                                    DateFormatType.yearMonthDayDashedCommaTime,
+                                    '${transaction.date?.toDate()}',
+                                    DateFormatType.deviceFormat,
                                     DateFormatType.dayOnly),
                                 style: AppFonts.menuTitleTextStyle(
                                     color: AppColors.textBlackColor, size: 32),
                               ),
                               Text(
                                   formatDate(
-                                      transaction.date ?? '',
-                                      DateFormatType
-                                          .yearMonthDayDashedCommaTime,
+                                      '${transaction.date?.toDate()}',
+                                      DateFormatType.deviceFormat,
                                       DateFormatType.monthNameCommaYear),
                                   style: AppFonts.menuTitleTextStyle(
                                       color: AppColors.textBlackColor,
@@ -249,14 +202,12 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             getIconWithSize(
-                model.transactionType?.toLowerCase() == 'load'
-                    ? 'incoming_icon.png'
-                    : 'outgoing_icon.png',
+                model.prediction?.outcome == "1.0" ? 'close.png' : 'check.png',
                 40,
                 40,
-                backgroundColor: model.transactionType?.toLowerCase() == 'load'
-                    ? AppColors.successColor
-                    : AppColors.failureColor,
+                backgroundColor: model.prediction?.outcome == "1.0"
+                    ? AppColors.failureColor
+                    : AppColors.successColor,
                 cornerRadius: 5.0),
             Expanded(
               child: Column(
@@ -268,15 +219,12 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        model.serviceName ??
-                            model.destinationAccount ??
-                            model.destinationOwnerName ??
-                            '',
+                        'Prediction of Diabetes',
                         style: AppFonts.titleMediumTextStyle(
                             color: AppColors.textBlackColor),
                       ),
                       Text(
-                        '${formatDate(model.date ?? '', DateFormatType.yearMonthDayDashedCommaTime, DateFormatType.hourMinuteAmPm)} | ${model.transactionStatus}',
+                        '${AppLocalizations.of(context)!.outcomeText}: ${model.prediction?.outcome == "1.0" ? "Negative" : "Positive"}',
                         style: AppFonts.bodyTextStyle(
                             color: AppColors.textGreyColor),
                       ),
@@ -284,13 +232,6 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                   ),
                 ].withSpaceBetween(height: 10),
               ),
-            ),
-            Text(
-              (model.amount ?? 0).toStringAsFixed(2),
-              style: AppFonts.titleMediumTextStyle(
-                  color: model.transactionType?.toLowerCase() == 'load'
-                      ? AppColors.successColor
-                      : AppColors.failureColor),
             ),
           ].withSpaceBetween(width: 12),
         ),

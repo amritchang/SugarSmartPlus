@@ -24,7 +24,7 @@ class PredictionScreen extends StatefulWidget {
 class _PredictionScreenState extends State<PredictionScreen> {
   final _formKey = GlobalKey<FormState>();
   String selectedGender = '';
-  PredictionRequest request = PredictionRequest();
+  PredictionModel request = PredictionModel();
   Interpreter? _interpreter;
 
   late PredictionApiService apiService;

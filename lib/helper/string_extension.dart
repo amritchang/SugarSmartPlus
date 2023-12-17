@@ -29,7 +29,7 @@ extension DateFormatTypeExtension on DateFormatType {
       case DateFormatType.monthNameDayCommaYearTimeAmPm:
         return 'MMM dd, yyyy, hh:mm a';
       case DateFormatType.deviceFormat:
-        return 'YYYY-MM-DD HH:MM:SS.ssssss';
+        return 'yyyy-MM-dd HH:mm:ss.SSS';
     }
   }
 }

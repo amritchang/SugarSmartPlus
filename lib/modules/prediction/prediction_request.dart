@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class PredictionRequest {
+class PredictionModel {
   String gender;
   String pregnancies;
   String glucose;
@@ -12,7 +12,7 @@ class PredictionRequest {
   String outcome;
 
   // Constructor with default values
-  PredictionRequest({
+  PredictionModel({
     this.pregnancies = '0',
     this.gender = '',
     this.glucose = '0',
@@ -40,5 +40,19 @@ class PredictionRequest {
     };
 
     return jsonMap;
+  }
+
+  factory PredictionModel.fromJson(Map<String, dynamic> json) {
+    return PredictionModel(
+      pregnancies: json['pregnancies'],
+      gender: json['gender'],
+      glucose: json['glucose'],
+      bloodpressure: json['bloodpressure'],
+      skinthickness: json['skinthickness'],
+      insulin: json['insulin'],
+      bmi: json['bmi'],
+      age: json['age'],
+      outcome: json['outcome'],
+    );
   }
 }

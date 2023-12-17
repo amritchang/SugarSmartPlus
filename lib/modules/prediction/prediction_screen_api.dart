@@ -17,7 +17,7 @@ class PredictionApiService {
     required this.context,
   });
 
-  Future<String?> savePredictionResult(PredictionRequest request) async {
+  Future<String?> savePredictionResult(PredictionModel request) async {
     SVProgressHUD.show();
     try {
       CollectionReference predictionsCollection =
