@@ -38,7 +38,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
 
   loadModel() async {
     // Load the TensorFlow Lite model
-    final interpreter = await Interpreter.fromAsset('assets/model.tflite');
+    final interpreter =
+        await Interpreter.fromAsset('assets/prediction_model.tflite');
     setState(() {
       _interpreter = interpreter;
     });
@@ -47,21 +48,23 @@ class _PredictionScreenState extends State<PredictionScreen> {
   Future _predictDiabetes() async {
     if (_formKey.currentState!.validate()) {
       // Sample data point
-      List<double> inputData = [
-        double.parse(request.pregnancies),
-        double.parse(request.glucose),
-        double.parse(request.bloodpressure),
-        double.parse(request.skinthickness),
-        double.parse(request.insulin),
-        double.parse(request.bmi),
-        0.5,
-        double.parse(request.age)
+      var inputData = [
+        [
+          double.parse(request.pregnancies),
+          double.parse(request.glucose),
+          double.parse(request.bloodpressure),
+          double.parse(request.skinthickness),
+          double.parse(request.insulin),
+          double.parse(request.bmi),
+          0.672,
+          double.parse(request.age)
+        ]
       ];
 
       Float32List input = Float32List.fromList(inputData.flatten());
 
       // Run inference
-      final output = List.filled(1 * 1, 0).reshape([1, 1]);
+      final output = List.filled(1, 0).reshape([1, 1]);
       _interpreter?.run(input, output);
       print(output);
       int prediction = output[0][0].round();
@@ -101,8 +104,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
       KeyValue(
           key: AppLocalizations.of(context)!.outcomeText,
           value: (request.outcome == '1.0' || request.outcome == '1')
-              ? 'Negative'
-              : 'Positive'),
+              ? 'Positive'
+              : 'Negative'),
     ];
 
     final args = ConfirmScreenArguments(

@@ -106,8 +106,8 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
         KeyValue(
             key: AppLocalizations.of(context)!.outcomeText,
             value: (request.outcome == '1.0' || request.outcome == '1')
-                ? 'Negative'
-                : 'Positive'),
+                ? 'Positive'
+                : 'Negative'),
       ];
 
       final args = ConfirmScreenArguments(
@@ -280,7 +280,7 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
                             color: AppColors.textBlackColor),
                       ),
                       Text(
-                        '${AppLocalizations.of(context)!.outcomeText}: ${(model.prediction?.outcome == "1.0" || model.prediction?.outcome == "1") ? "Negative" : "Positive"}',
+                        '${AppLocalizations.of(context)!.outcomeText} ${model.prediction?.outcome}: ${(model.prediction?.outcome == "1.0" || model.prediction?.outcome == "1") ? "Positive" : "Negative"}',
                         style: AppFonts.bodyTextStyle(
                             color: AppColors.textGreyColor),
                       ),
