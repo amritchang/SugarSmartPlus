@@ -132,6 +132,7 @@
     "insulinText": "Insulin",
     "bmiText": "BMI",
     "ageText": "Age",
+    "diabetesPedigreeFunctionText": "Diabetes Pedigree Function",
     "outcomeText": "Outcome",
     "predictionScreenTitle": "Prediction",
     "predictionScreenDesc": "Enter detail to make a prediction",

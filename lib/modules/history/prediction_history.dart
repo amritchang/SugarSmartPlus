@@ -101,6 +101,9 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
             key: '${AppLocalizations.of(context)!.insulinText} (IU/mL)',
             value: request.insulin),
         KeyValue(
+            key: AppLocalizations.of(context)!.diabetesPedigreeFunctionText,
+            value: request.diabetesPedigreeFunction),
+        KeyValue(
             key: '${AppLocalizations.of(context)!.bmiText} (kg/m^2)',
             value: request.bmi),
         KeyValue(

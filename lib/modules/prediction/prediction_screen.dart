@@ -11,9 +11,6 @@ import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments
 import 'package:sugar_smart_assist/modules/dropdown/dropdown_screen_arguments.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_screen_api.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
-
-import 'dart:typed_data';
 
 class PredictionScreen extends StatefulWidget {
   const PredictionScreen({Key? key}) : super(key: key);
@@ -25,7 +22,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
   final _formKey = GlobalKey<FormState>();
   String selectedGender = '';
   PredictionModel request = PredictionModel();
-  Interpreter? _interpreter;
 
   late PredictionApiService apiService;
 
@@ -33,48 +29,22 @@ class _PredictionScreenState extends State<PredictionScreen> {
   void initState() {
     super.initState();
     apiService = PredictionApiService(context: context);
-    loadModel();
-  }
-
-  loadModel() async {
-    // Load the TensorFlow Lite model
-    final interpreter =
-        await Interpreter.fromAsset('assets/prediction_model.tflite');
-    setState(() {
-      _interpreter = interpreter;
-    });
   }
 
   Future _predictDiabetes() async {
     if (_formKey.currentState!.validate()) {
-      // Sample data point
-      var inputData = [
-        [
-          double.parse(request.pregnancies),
-          double.parse(request.glucose),
-          double.parse(request.bloodpressure),
-          double.parse(request.skinthickness),
-          double.parse(request.insulin),
-          double.parse(request.bmi),
-          0.672,
-          double.parse(request.age)
-        ]
-      ];
-
-      Float32List input = Float32List.fromList(inputData.flatten());
-
-      // Run inference
-      final output = List.filled(1, 0).reshape([1, 1]);
-      _interpreter?.run(input, output);
-      print(output);
-      int prediction = output[0][0].round();
-
-      request.outcome = '$prediction';
-
-      var res = await apiService.savePredictionResult(request);
+      var res = await apiService.makeApiCall(request);
       if (res != null) {
-        _navigateToDetailScreen(res, '$prediction');
+        request.outcome = res;
+        _savePrediction();
       }
+    }
+  }
+
+  void _savePrediction() async {
+    var res = await apiService.savePredictionResult(request);
+    if (res != null) {
+      _navigateToDetailScreen(res, '$prediction');
     }
   }
 
@@ -99,6 +69,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
           key: '${AppLocalizations.of(context)!.insulinText} (IU/mL)',
           value: request.insulin),
       KeyValue(
+          key: AppLocalizations.of(context)!.diabetesPedigreeFunctionText,
+          value: request.diabetesPedigreeFunction),
+      KeyValue(
           key: '${AppLocalizations.of(context)!.bmiText} (kg/m^2)',
           value: request.bmi),
       KeyValue(
@@ -115,9 +88,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
           .toList(),
       id,
       outcome,
-      ConfirmScreenType.detail,
+      ConfirmScreenType.none,
     );
-    Navigator.pushReplacement(context, AppRouter().start(confirmScreen, args));
+    Navigator.push(context, AppRouter().start(confirmScreen, args));
   }
 
   @override
@@ -278,6 +251,15 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     type: TextFieldType.numberpad,
                                     onTextChanged: (text) {
                                       request.insulin = text;
+                                    },
+                                  ),
+                                  const SizedBox(height: 20),
+                                  AppTextField(
+                                    placeholder: AppLocalizations.of(context)!
+                                        .diabetesPedigreeFunctionText,
+                                    type: TextFieldType.numberpadWithDecimal,
+                                    onTextChanged: (text) {
+                                      request.diabetesPedigreeFunction = text;
                                     },
                                   ),
                                   const SizedBox(height: 20),

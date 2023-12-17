@@ -9,6 +9,7 @@ class PredictionModel {
   String insulin;
   String bmi;
   String age;
+  String diabetesPedigreeFunction;
   String outcome;
 
   // Constructor with default values
@@ -21,6 +22,7 @@ class PredictionModel {
     this.insulin = '0',
     this.bmi = '0',
     this.age = '0',
+    this.diabetesPedigreeFunction = '0',
     this.outcome = '0',
   });
 
@@ -36,6 +38,7 @@ class PredictionModel {
       'insulin': insulin,
       'bmi': bmi,
       'age': age,
+      'diabetesPedigreeFunction': diabetesPedigreeFunction,
       'outcome': outcome,
     };
 
