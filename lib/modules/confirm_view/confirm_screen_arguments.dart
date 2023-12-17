@@ -1,6 +1,6 @@
 import 'package:sugar_smart_assist/models/key_value.dart';
 
-enum ConfirmScreenType { receipt, none, paymentConfirm }
+enum ConfirmScreenType { detail, none }
 
 class ConfirmScreenButtonSelectionArguments {
   ConfirmScreenButtonSelectionArguments();
@@ -9,9 +9,10 @@ class ConfirmScreenButtonSelectionArguments {
 class ConfirmScreenArguments {
   final String title;
   final List<KeyValue> data;
-  final void Function(ConfirmScreenButtonSelectionArguments?) onConfirmAction;
+  final String predictionId;
+  final String predictionOutcome;
   ConfirmScreenType type;
 
-  ConfirmScreenArguments(
-      this.title, this.data, this.type, this.onConfirmAction);
+  ConfirmScreenArguments(this.title, this.data, this.predictionId,
+      this.predictionOutcome, this.type);
 }

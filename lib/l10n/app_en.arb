@@ -135,5 +135,6 @@
     "outcomeText": "Outcome",
     "predictionScreenTitle": "Prediction",
     "predictionScreenDesc": "Enter detail to make a prediction",
-    "predictButtonText": "Predict"
+    "predictButtonText": "Predict",
+    "getMeChatGptSuggestionButtonText": "Get Suggestion"
 }

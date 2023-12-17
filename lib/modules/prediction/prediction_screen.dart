@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sugar_smart_assist/app_router/app_router.dart';
 import 'package:sugar_smart_assist/custom_views/navbar/title_navbar.dart';
 import 'package:sugar_smart_assist/helper/app_color_helper.dart';
 import 'package:sugar_smart_assist/helper/app_font_helper.dart';
@@ -6,9 +7,13 @@ import 'package:sugar_smart_assist/custom_views/button/app_button.dart';
 import 'package:sugar_smart_assist/custom_views/textfield/app_textfield.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sugar_smart_assist/models/key_value.dart';
+import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments.dart';
 import 'package:sugar_smart_assist/modules/dropdown/dropdown_screen_arguments.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_screen_api.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+
+import 'dart:typed_data';
 
 class PredictionScreen extends StatefulWidget {
   const PredictionScreen({Key? key}) : super(key: key);
@@ -20,6 +25,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   final _formKey = GlobalKey<FormState>();
   String selectedGender = '';
   PredictionRequest request = PredictionRequest();
+  Interpreter? _interpreter;
 
   late PredictionApiService apiService;
 
@@ -27,10 +33,86 @@ class _PredictionScreenState extends State<PredictionScreen> {
   void initState() {
     super.initState();
     apiService = PredictionApiService(context: context);
+    loadModel();
   }
 
-  Future _triggerAPI() async {
-    if (_formKey.currentState!.validate()) {}
+  loadModel() async {
+    // Load the TensorFlow Lite model
+    final interpreter = await Interpreter.fromAsset('assets/model.tflite');
+    setState(() {
+      _interpreter = interpreter;
+    });
+  }
+
+  Future _predictDiabetes() async {
+    if (_formKey.currentState!.validate()) {
+      // Sample data point
+      List<double> inputData = [
+        double.parse(request.pregnancies),
+        double.parse(request.glucose),
+        double.parse(request.bloodpressure),
+        double.parse(request.skinthickness),
+        double.parse(request.insulin),
+        double.parse(request.bmi),
+        0.5,
+        double.parse(request.age)
+      ];
+
+      Float32List input = Float32List.fromList(inputData.flatten());
+
+      // Run inference
+      final output = List.filled(1 * 1, 0).reshape([1, 1]);
+      _interpreter?.run(input, output);
+      print(output);
+      int prediction = output[0][0].round();
+
+      request.outcome = '$prediction';
+
+      var res = await apiService.savePredictionResult(request);
+      if (res != null) {
+        _navigateToDetailScreen(res, '$prediction');
+      }
+    }
+  }
+
+  void _navigateToDetailScreen(String id, String outcome) {
+    List<KeyValue> data = [
+      KeyValue(key: AppLocalizations.of(context)!.ageText, value: request.age),
+      KeyValue(
+          key: AppLocalizations.of(context)!.genderText, value: request.gender),
+      KeyValue(
+          key: AppLocalizations.of(context)!.pregnanciesText,
+          value: request.pregnancies),
+      KeyValue(
+          key: '${AppLocalizations.of(context)!.glucoseText} (mg/dL)',
+          value: request.glucose),
+      KeyValue(
+          key: '${AppLocalizations.of(context)!.bloodPressureText} (mmHg)',
+          value: request.bloodpressure),
+      KeyValue(
+          key: AppLocalizations.of(context)!.skinnThicknessText,
+          value: request.skinthickness),
+      KeyValue(
+          key: '${AppLocalizations.of(context)!.insulinText} (IU/mL)',
+          value: request.insulin),
+      KeyValue(
+          key: '${AppLocalizations.of(context)!.bmiText} (kg/m^2)',
+          value: request.bmi),
+      KeyValue(
+          key: AppLocalizations.of(context)!.outcomeText,
+          value: request.outcome == '1' ? 'Positive' : 'Negative'),
+    ];
+
+    final args = ConfirmScreenArguments(
+      AppLocalizations.of(context)!.predictionScreenTitle,
+      data
+          .where((item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
+          .toList(),
+      id,
+      outcome,
+      ConfirmScreenType.detail,
+    );
+    Navigator.pushReplacement(context, AppRouter().start(confirmScreen, args));
   }
 
   @override
@@ -197,7 +279,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder:
                                         AppLocalizations.of(context)!.bmiText,
-                                    type: TextFieldType.numberpad,
+                                    type: TextFieldType.numberpadWithDecimal,
                                     onTextChanged: (text) {
                                       request.bmi = text;
                                     },
@@ -209,7 +291,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                 title: AppLocalizations.of(context)!
                                     .predictButtonText,
                                 onPressed: () {
-                                  _triggerAPI();
+                                  _predictDiabetes();
                                 },
                                 backgroundColor: AppColors.primaryColor,
                               ),

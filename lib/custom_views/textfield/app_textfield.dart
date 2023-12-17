@@ -20,6 +20,7 @@ enum TextFieldType {
   dropdown,
   datePicker,
   numberpad,
+  numberpadWithDecimal,
   remarks,
   none,
 }
@@ -204,6 +205,8 @@ class _AppTextFieldState extends State<AppTextField> {
       case TextFieldType.mobileNumber:
       case TextFieldType.numberpad:
         return TextInputType.number;
+      case TextFieldType.numberpadWithDecimal:
+        return const TextInputType.numberWithOptions(decimal: true);
       case TextFieldType.email:
         return TextInputType.emailAddress;
       case TextFieldType.dropdown:

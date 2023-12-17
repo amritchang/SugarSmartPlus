@@ -17,7 +17,7 @@ class PredictionApiService {
     required this.context,
   });
 
-  Future<bool?> savePredictionResult(PredictionRequest request) async {
+  Future<String?> savePredictionResult(PredictionRequest request) async {
     SVProgressHUD.show();
     try {
       CollectionReference predictionsCollection =
@@ -32,9 +32,9 @@ class PredictionApiService {
       SVProgressHUD.dismiss();
       var res = await saveToHistory(predictionId);
       if (res != null) {
-        return true;
+        return predictionId;
       } else {
-        return false;
+        return null;
       }
     } catch (e) {
       _showErrorAlert('$e');

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sugar_smart_assist/app_router/app_router.dart';
 import 'package:sugar_smart_assist/custom_views/navbar/title_navbar.dart';
 import 'package:sugar_smart_assist/helper/app_color_helper.dart';
 import 'package:sugar_smart_assist/models/key_value.dart';
@@ -30,12 +31,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     super.dispose();
   }
 
-  String _getButtonTitle() {
-    return AppLocalizations.of(context)!.confirmButton;
-  }
-
-  void _handleButtonAction() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,36 +39,30 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           title: widget.arguments.title.capitalize ?? '',
           bgColor: AppColors.primaryBackgroundColor,
           tintColor: AppColors.themeBlack,
-          shouldShowBackButton:
-              widget.arguments.type != ConfirmScreenType.receipt),
+          shouldShowBackButton: false),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            if (widget.arguments.type != ConfirmScreenType.receipt)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.confirmScreenSubTitle,
-                    style: AppFonts.screenSubTitleTextStyle(
-                        color: AppColors.textGreyColor),
-                  ),
-                ),
-              ),
             _buildList(),
-            SizedBox(
-                height:
-                    (widget.arguments.type == ConfirmScreenType.paymentConfirm)
-                        ? 10
-                        : 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: AppButton(
-                title: widget.arguments.type == ConfirmScreenType.receipt
-                    ? AppLocalizations.of(context)!.goBackToDashboardText
-                    : _getButtonTitle(),
+                title: AppLocalizations.of(context)!
+                    .getMeChatGptSuggestionButtonText,
                 onPressed: () {},
+                backgroundColor: AppColors.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: AppButton(
+                title: AppLocalizations.of(context)!.goBackToDashboardText,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, AppRouter().start(dashboardRoute));
+                },
                 backgroundColor: AppColors.primaryColor,
               ),
             ),
@@ -101,11 +90,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     data: keyValue,
                     alignment: CrossAxisAlignment.start,
                     keyAlignment: TextAlign.left,
-                    valueAlignment:
-                        widget.arguments.type == ConfirmScreenType.receipt
-                            ? TextAlign.right
-                            : TextAlign.left,
-                    hideDot: widget.arguments.type == ConfirmScreenType.receipt,
+                    valueAlignment: TextAlign.right,
+                    hideDot: true,
                   ),
                 ],
               ],
