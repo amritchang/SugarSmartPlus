@@ -88,6 +88,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
           .toList(),
       id,
       outcome,
+      request,
+      null,
       ConfirmScreenType.none,
     );
     Navigator.push(context, AppRouter().start(confirmScreen, args));

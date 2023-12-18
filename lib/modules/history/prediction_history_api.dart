@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sugar_smart_assist/app_url/app_url.dart';
-import 'package:sugar_smart_assist/modules/history/prediction_history_request.dart';
+import 'package:sugar_smart_assist/models/suggestion.dart';
 import 'package:sugar_smart_assist/modules/history/prediction_history_response.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,8 +14,6 @@ import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 class PredictionnHistoryApiService {
   BuildContext context;
   List<PredictionHistoryResponse> data = [];
-  List<dynamic> pageList = [];
-  bool isFetching = false;
 
   // Constructor
   PredictionnHistoryApiService({
@@ -62,10 +60,24 @@ class PredictionnHistoryApiService {
     }
   }
 
-  void _showSuccessAlert(String message, Function()? onOkPressed) {
-    showAlertDialogWithOk(
-        AppLocalizations.of(context)!.successText, message, context,
-        onOkPressed: onOkPressed);
+  Future<String?> getSuggestion(String predictionId) async {
+    try {
+      // Fetch data from the 'history' collection based on userId
+      DocumentSnapshot predictionDoc = await FirebaseFirestore.instance
+          .collection(Constant.suggestionTable)
+          .doc(predictionId)
+          .get();
+
+      Map<String, dynamic> suggestionJson =
+          predictionDoc.data() as Map<String, dynamic>;
+
+      var model = SuggestionModel.fromJson(suggestionJson);
+
+      return model.suggestion;
+    } catch (e) {
+      _showErrorAlert('$e');
+      return null;
+    }
   }
 
   void _showErrorAlert(String message) {

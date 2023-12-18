@@ -76,54 +76,65 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
     _simulateLoad(isRefreshControl: true);
   }
 
-  void _navigateToDetailScreen(PredictionHistoryResponse model) {
+  void _navigateToDetailScreen(PredictionHistoryResponse model) async {
     var request = model.prediction;
     if (request != null) {
       List<KeyValue> data = [
         KeyValue(
-            key: AppLocalizations.of(context)!.ageText, value: request.age),
+            key: AppLocalizations.of(_getContext())!.ageText,
+            value: request.age),
         KeyValue(
-            key: AppLocalizations.of(context)!.genderText,
+            key: AppLocalizations.of(_getContext())!.genderText,
             value: request.gender),
         KeyValue(
-            key: AppLocalizations.of(context)!.pregnanciesText,
+            key: AppLocalizations.of(_getContext())!.pregnanciesText,
             value: request.pregnancies),
         KeyValue(
-            key: '${AppLocalizations.of(context)!.glucoseText} (mg/dL)',
+            key: '${AppLocalizations.of(_getContext())!.glucoseText} (mg/dL)',
             value: request.glucose),
         KeyValue(
-            key: '${AppLocalizations.of(context)!.bloodPressureText} (mmHg)',
+            key:
+                '${AppLocalizations.of(_getContext())!.bloodPressureText} (mmHg)',
             value: request.bloodpressure),
         KeyValue(
-            key: AppLocalizations.of(context)!.skinnThicknessText,
+            key: AppLocalizations.of(_getContext())!.skinnThicknessText,
             value: request.skinthickness),
         KeyValue(
-            key: '${AppLocalizations.of(context)!.insulinText} (IU/mL)',
+            key: '${AppLocalizations.of(_getContext())!.insulinText} (IU/mL)',
             value: request.insulin),
         KeyValue(
-            key: AppLocalizations.of(context)!.diabetesPedigreeFunctionText,
+            key: AppLocalizations.of(_getContext())!
+                .diabetesPedigreeFunctionText,
             value: request.diabetesPedigreeFunction),
         KeyValue(
-            key: '${AppLocalizations.of(context)!.bmiText} (kg/m^2)',
+            key: '${AppLocalizations.of(_getContext())!.bmiText} (kg/m^2)',
             value: request.bmi),
         KeyValue(
-            key: AppLocalizations.of(context)!.outcomeText,
+            key: AppLocalizations.of(_getContext())!.outcomeText,
             value: (request.outcome == '1.0' || request.outcome == '1')
                 ? 'Positive'
                 : 'Negative'),
       ];
 
       final args = ConfirmScreenArguments(
-        AppLocalizations.of(context)!.predictionScreenTitle,
+        AppLocalizations.of(_getContext())!.predictionScreenTitle,
         data
             .where((item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
             .toList(),
         model.predictionId ?? '',
         request.outcome,
+        request,
+        (request.outcome == '1.0' || request.outcome == '1')
+            ? await apiService.getSuggestion(model.predictionId ?? '')
+            : null,
         ConfirmScreenType.none,
       );
-      Navigator.push(context, AppRouter().start(confirmScreen, args));
+      Navigator.push(_getContext(), AppRouter().start(confirmScreen, args));
     }
+  }
+
+  BuildContext _getContext() {
+    return context;
   }
 
   @override

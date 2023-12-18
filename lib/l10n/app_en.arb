@@ -137,5 +137,6 @@
     "predictionScreenTitle": "Prediction",
     "predictionScreenDesc": "Enter detail to make a prediction",
     "predictButtonText": "Predict",
-    "getMeChatGptSuggestionButtonText": "Get Suggestion"
+    "getMeChatGptSuggestionButtonText": "Get Suggestion",
+    "suggestionText": "Suggestion"
 }

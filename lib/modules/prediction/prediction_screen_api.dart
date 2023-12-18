@@ -69,7 +69,6 @@ class PredictionApiService {
   }
 
   Future<String?> makeApiCall(PredictionModel model) async {
-    const String apiUrl = 'http://127.0.0.1:5000/predict_diabetes';
     SVProgressHUD.show();
     // Replace these values with your input parameters
     Map<String, dynamic> inputData = {
@@ -85,7 +84,7 @@ class PredictionApiService {
 
     try {
       final response = await http.post(
-        Uri.parse(apiUrl),
+        Uri.parse(Constant.predictionModelUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
