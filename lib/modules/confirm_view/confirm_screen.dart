@@ -57,7 +57,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     var res = await chatGptApiService.getChatGPTSuggestion(question);
     if (res != null) {
       var savedResponse = await apiService.saveToSuggestion(
-          widget.arguments.predictionId, '', res);
+          widget.arguments.predictionId, question, res);
       if (savedResponse != null) {
         setState(() {
           suggestionText = res;

@@ -22,6 +22,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   final _formKey = GlobalKey<FormState>();
   String selectedGender = '';
   PredictionModel request = PredictionModel();
+  bool isUpdatePersonal = false;
 
   late PredictionApiService apiService;
 
@@ -42,9 +43,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
   }
 
   void _savePrediction() async {
-    var res = await apiService.savePredictionResult(request);
+    var res = await apiService.savePredictionResult(request, isUpdatePersonal);
     if (res != null) {
-      _navigateToDetailScreen(res, '$prediction');
+      _navigateToDetailScreen(res, prediction);
     }
   }
 
@@ -274,6 +275,31 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     },
                                   ),
                                 ]),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: isUpdatePersonal,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        isUpdatePersonal = newValue ?? false;
+                                      });
+                                    },
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: AppLocalizations.of(context)!
+                                              .updatePersonalHealthMetrices,
+                                          style: AppFonts.bodyTextStyle(
+                                              color: AppColors.textGreyColor),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 20),
                               AppButton(

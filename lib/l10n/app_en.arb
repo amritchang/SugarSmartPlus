@@ -138,5 +138,6 @@
     "predictionScreenDesc": "Enter detail to make a prediction",
     "predictButtonText": "Predict",
     "getMeChatGptSuggestionButtonText": "Get Suggestion",
-    "suggestionText": "Suggestion"
+    "suggestionText": "Suggestion",
+    "updatePersonalHealthMetrices": "Update your health metrics"
 }

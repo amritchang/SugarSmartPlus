@@ -62,15 +62,14 @@ class PredictionnHistoryApiService {
 
   Future<String?> getSuggestion(String predictionId) async {
     try {
-      // Fetch data from the 'history' collection based on userId
-      DocumentSnapshot doc = await FirebaseFirestore.instance
+      QuerySnapshot query = await FirebaseFirestore.instance
           .collection(Constant.suggestionTable)
-          .doc(predictionId)
+          .where('predictionId', isEqualTo: predictionId)
           .get();
 
-      if (doc.data() != null) {
+      if (query.docs.isNotEmpty && query.docs.first.data() != null) {
         Map<String, dynamic>? suggestionJson =
-            doc.data() as Map<String, dynamic>;
+            query.docs.first.data() as Map<String, dynamic>;
 
         var model = SuggestionModel.fromJson(suggestionJson);
 

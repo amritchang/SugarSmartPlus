@@ -14,6 +14,7 @@ class Constant {
   static String predictionTable = 'prediction';
   static String historyTable = 'history';
   static String suggestionTable = 'suggestion';
+  static String healthMetricTable = 'healthMetrics';
 
   static String predictionModelUrl = 'http://127.0.0.1:5000/predict_diabetes';
   static String chatGPTUrl = 'https://api.openai.com/v1/chat/completions';
