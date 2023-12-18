@@ -79,7 +79,7 @@ class AppRouter {
             screen: 3,
             titleText: AppLocalizations.of(context)!.onBoardThirdScreenTitle,
             subTitleText:
-                AppLocalizations.of(context)!.onBoardThirdScreenTitle);
+                AppLocalizations.of(context)!.onBoardThirdScreenSubTitle);
       case signUpOption:
         return const SignUpOptionScreen();
       case signUp:
