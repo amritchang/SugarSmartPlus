@@ -1,10 +1,10 @@
 { 
-    "onBoardFirstScreenTitle": "OnBoard1Title",
-    "onBoardFirstScreenSubTitle": "OnBoard1Desc",
-    "onBoardSecondScreenTitle": "OnBoard2Title",
-    "onBoardSecondScreenSubTitle": "OnBoard2Desc",
-    "onBoardThirdScreenTitle": "OnBoard3Title",
-    "onBoardThirdScreenSubTitle": "OnBoard3Desc",
+    "onBoardFirstScreenTitle": "Predict",
+    "onBoardFirstScreenSubTitle": "Predict your chance to have a diabetes",
+    "onBoardSecondScreenTitle": "Update",
+    "onBoardSecondScreenSubTitle": "Update your current Health Metrics",
+    "onBoardThirdScreenTitle": "Suggest",
+    "onBoardThirdScreenSubTitle": "Get free general suggestion based on your prediction",
 
     "welcomeToSugarSmartAssistText": "Welcome to Sugar Smart Assist",
     "alreadyHaveAccountText": "Already have an account ?",
