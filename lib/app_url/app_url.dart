@@ -16,8 +16,7 @@ class Constant {
   static String suggestionTable = 'suggestion';
 
   static String predictionModelUrl = 'http://127.0.0.1:5000/predict_diabetes';
-  static String chatGPTUrl =
-      'https://api.openai.com/v1/models/davinci-codex/completions';
+  static String chatGPTUrl = 'https://api.openai.com/v1/chat/completions';
   static String chatGPTKey =
-      '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';
+      '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';
 }

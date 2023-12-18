@@ -63,17 +63,21 @@ class PredictionnHistoryApiService {
   Future<String?> getSuggestion(String predictionId) async {
     try {
       // Fetch data from the 'history' collection based on userId
-      DocumentSnapshot predictionDoc = await FirebaseFirestore.instance
+      DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection(Constant.suggestionTable)
           .doc(predictionId)
           .get();
 
-      Map<String, dynamic> suggestionJson =
-          predictionDoc.data() as Map<String, dynamic>;
+      if (doc.data() != null) {
+        Map<String, dynamic>? suggestionJson =
+            doc.data() as Map<String, dynamic>;
 
-      var model = SuggestionModel.fromJson(suggestionJson);
+        var model = SuggestionModel.fromJson(suggestionJson);
 
-      return model.suggestion;
+        return model.suggestion;
+      } else {
+        return null;
+      }
     } catch (e) {
       _showErrorAlert('$e');
       return null;

@@ -20,15 +20,13 @@ class ChatGPTApiService {
   Future<String?> getChatGPTSuggestion(String question) async {
     SVProgressHUD.show();
 
-    print(question);
-
     if (question.isEmpty) {
       return null;
     }
 
     messages.add({
       'role': 'user',
-      'content': question,
+      'content': 'question',
     });
 
     final headers = {
@@ -36,7 +34,7 @@ class ChatGPTApiService {
       'Authorization': 'Bearer ${Constant.chatGPTKey}',
     };
 
-    final body = {'model': 'gpt-3.5-turbo', 'messages': messages};
+    final body = {'model': 'gpt-3.5-turbo-16k', 'messages': messages};
 
     final response = await http.post(
       Uri.parse(Constant.chatGPTUrl),
@@ -47,8 +45,7 @@ class ChatGPTApiService {
     if (response.statusCode == 200) {
       SVProgressHUD.dismiss();
       final Map<String, dynamic> data = json.decode(response.body);
-      print(data);
-      // return data['choices'][0]['text'];
+      return data['choices']['message'][0]['content'];
     } else {
       SVProgressHUD.dismiss();
       print(response.body);
