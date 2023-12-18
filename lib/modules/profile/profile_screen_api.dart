@@ -21,11 +21,6 @@ class ProfileApiService {
     SVProgressHUD.show();
     try {
       var uid = FirebaseAuth.instance.currentUser?.uid;
-      // Reference to the 'users' collection in Firestore
-      CollectionReference usersCollection =
-          FirebaseFirestore.instance.collection(Constant.userTable);
-      CollectionReference usersHealthCollection =
-          FirebaseFirestore.instance.collection(Constant.healthMetricTable);
 
       QuerySnapshot querySnapshotSuggestion = await FirebaseFirestore.instance
           .collection(Constant.suggestionTable)
@@ -34,17 +29,6 @@ class ProfileApiService {
 
       for (QueryDocumentSnapshot documentSnapshot
           in querySnapshotSuggestion.docs) {
-        // Delete each document
-        await documentSnapshot.reference.delete();
-      }
-
-      QuerySnapshot querySnapshotPrediction = await FirebaseFirestore.instance
-          .collection(Constant.predictionTable)
-          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-          .get();
-
-      for (QueryDocumentSnapshot documentSnapshot
-          in querySnapshotPrediction.docs) {
         // Delete each document
         await documentSnapshot.reference.delete();
       }
@@ -60,6 +44,21 @@ class ProfileApiService {
         await documentSnapshot.reference.delete();
       }
 
+      QuerySnapshot querySnapshotPrediction = await FirebaseFirestore.instance
+          .collection(Constant.predictionTable)
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      for (QueryDocumentSnapshot documentSnapshot
+          in querySnapshotPrediction.docs) {
+        // Delete each document
+        await documentSnapshot.reference.delete();
+      }
+
+      CollectionReference usersCollection =
+          FirebaseFirestore.instance.collection(Constant.userTable);
+      CollectionReference usersHealthCollection =
+          FirebaseFirestore.instance.collection(Constant.healthMetricTable);
       await usersHealthCollection.doc(uid).delete();
       await usersCollection.doc(uid).delete();
       await FirebaseAuth.instance.currentUser?.delete();
