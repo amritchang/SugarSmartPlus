@@ -17,18 +17,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenScreenState extends State<HomeScreen> {
   late HomeApiService apiService;
+  var _isInit = false;
 
   @override
   void initState() {
     super.initState();
     apiService = HomeApiService(context: context);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Call _getHealthMetrics when the view appears or dependencies change
-    _getHealthMetrics();
+    if (!_isInit) {
+      _getHealthMetrics();
+    }
+    _isInit = true;
   }
 
   void _getHealthMetrics() async {

@@ -55,7 +55,6 @@ class HealthMetrics {
       age: json['age'],
       diabetesPedigreeFunction: json['diabetesPedigreeFunction'],
       outcome: json['outcome'],
-      userId: json['userId'],
     );
   }
 }

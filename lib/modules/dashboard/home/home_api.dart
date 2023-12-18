@@ -26,7 +26,8 @@ class HomeApiService {
         Map<String, dynamic> userData =
             userSnapshot.data() as Map<String, dynamic>;
         SVProgressHUD.dismiss();
-        return HealthMetrics.fromJson(userData);
+        var data = HealthMetrics.fromJson(userData);
+        return data;
       } else {
         SVProgressHUD.dismiss();
         return null;
