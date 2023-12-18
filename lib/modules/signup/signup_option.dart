@@ -110,38 +110,14 @@ class _SignUpOptionScreenState extends State<SignUpOptionScreen> {
                           height: 20,
                         ),
                         AppButton(
-                          title: AppLocalizations.of(context)!
-                              .continueWithGoogleButton,
-                          onPressed: () {},
-                          titleColor: AppColors.textGreyColor,
+                          title:
+                              '${AppLocalizations.of(context)!.alreadyHaveAccountText} ${AppLocalizations.of(context)!.loginButton}',
+                          onPressed: () {
+                            Navigator.push(context, AppRouter().start(login));
+                          },
+                          titleColor: AppColors.textBlackColor,
                           backgroundColor: AppColors.themeWhite,
-                          iconName: 'google.png',
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .alreadyHaveAccountText,
-                                style: AppFonts.buttonTitleStyle(),
-                              ),
-                              AppButton(
-                                title:
-                                    AppLocalizations.of(context)!.loginButton,
-                                onPressed: () {
-                                  Navigator.push(
-                                      context, AppRouter().start(login));
-                                },
-                                titleColor: AppColors.primaryColor,
-                                backgroundColor: Colors.transparent,
-                              ),
-                            ],
-                          ),
+                          iconName: 'profile.png',
                         ),
                       ],
                     ),
