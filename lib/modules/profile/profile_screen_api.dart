@@ -24,6 +24,19 @@ class ProfileApiService {
       // Reference to the 'users' collection in Firestore
       CollectionReference usersCollection =
           FirebaseFirestore.instance.collection(Constant.userTable);
+      CollectionReference usersHealthCollection =
+          FirebaseFirestore.instance.collection(Constant.healthMetricTable);
+
+      QuerySnapshot querySnapshotSuggestion = await FirebaseFirestore.instance
+          .collection(Constant.suggestionTable)
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      for (QueryDocumentSnapshot documentSnapshot
+          in querySnapshotSuggestion.docs) {
+        // Delete each document
+        await documentSnapshot.reference.delete();
+      }
 
       QuerySnapshot querySnapshotPrediction = await FirebaseFirestore.instance
           .collection(Constant.predictionTable)
@@ -47,7 +60,7 @@ class ProfileApiService {
         await documentSnapshot.reference.delete();
       }
 
-      // Delete the document with the specified UID
+      await usersHealthCollection.doc(uid).delete();
       await usersCollection.doc(uid).delete();
       await FirebaseAuth.instance.currentUser?.delete();
       SVProgressHUD.dismiss();

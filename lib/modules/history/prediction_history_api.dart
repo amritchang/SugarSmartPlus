@@ -26,6 +26,7 @@ class PredictionnHistoryApiService {
       // Fetch data from the 'history' collection based on userId
       QuerySnapshot historyQuery = await FirebaseFirestore.instance
           .collection(Constant.historyTable)
+          .orderBy('date', descending: true)
           .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .get();
 
@@ -55,6 +56,7 @@ class PredictionnHistoryApiService {
 
       return data;
     } catch (e) {
+      print(e);
       _showErrorAlert('$e');
       return null;
     }
