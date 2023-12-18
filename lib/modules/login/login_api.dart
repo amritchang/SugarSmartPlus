@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
+import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sugar_smart_assist/storage/storage.dart';
@@ -56,7 +57,7 @@ class LoginApiService {
     SVProgressHUD.show();
     try {
       DocumentSnapshot userSnapshot =
-          await _firestore.collection('users').doc(uid).get();
+          await _firestore.collection(Constant.userTable).doc(uid).get();
       if (userSnapshot.exists) {
         // User found, you can access user data
         Map<String, dynamic> userData =

@@ -91,7 +91,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
       outcome,
       request,
       null,
-      ConfirmScreenType.none,
+      ConfirmScreenType.detail,
     );
     Navigator.push(context, AppRouter().start(confirmScreen, args));
   }
