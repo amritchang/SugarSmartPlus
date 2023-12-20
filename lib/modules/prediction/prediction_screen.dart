@@ -90,7 +90,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
       id,
       outcome,
       request,
-      null,
+      (request.outcome == '1.0' || request.outcome == '1') ? '' : null,
       ConfirmScreenType.detail,
     );
     Navigator.push(context, AppRouter().start(confirmScreen, args));

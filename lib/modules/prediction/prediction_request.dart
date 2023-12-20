@@ -46,12 +46,13 @@ class PredictionModel {
   }
 
   // Create a method to convert the object to JSON
-  Map<String, dynamic> toPersonalHealthMetricsJson() {
+  Map<String, dynamic> toPersonalHealthMetricsJson(String id) {
     Map<String, dynamic> jsonMap = {
       'pregnancies': pregnancies,
       'glucose': glucose,
       'bloodpressure': bloodpressure,
       'skinthickness': skinthickness,
+      'predictionId': id,
       'insulin': insulin,
       'bmi': bmi,
       'age': age,

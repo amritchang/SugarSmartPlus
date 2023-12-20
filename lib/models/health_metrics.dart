@@ -11,6 +11,7 @@ class HealthMetrics {
   String age;
   String diabetesPedigreeFunction;
   String outcome;
+  String predictionId;
 
   // Constructor with default values
   HealthMetrics({
@@ -24,6 +25,7 @@ class HealthMetrics {
     this.age = '0',
     this.diabetesPedigreeFunction = '0',
     this.outcome = '0',
+    this.predictionId = '',
   });
 
 // Create a method to convert the object to JSON
@@ -55,6 +57,7 @@ class HealthMetrics {
       age: json['age'],
       diabetesPedigreeFunction: json['diabetesPedigreeFunction'],
       outcome: json['outcome'],
+      predictionId: json['predictionId'],
     );
   }
 }

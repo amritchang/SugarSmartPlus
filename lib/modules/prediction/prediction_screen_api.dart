@@ -22,9 +22,7 @@ class PredictionApiService {
   Future<String?> savePredictionResult(
       PredictionModel request, bool shouldUpdatePersonalHealthMetric) async {
     SVProgressHUD.show();
-    if (shouldUpdatePersonalHealthMetric) {
-      await savePersonalHealthMetrics(request);
-    }
+
     try {
       CollectionReference predictionsCollection =
           _firestore.collection(Constant.predictionTable);
@@ -36,6 +34,9 @@ class PredictionApiService {
       // Extract the document ID
       String predictionId = documentReference.id;
       SVProgressHUD.dismiss();
+      if (shouldUpdatePersonalHealthMetric) {
+        await savePersonalHealthMetrics(request, predictionId);
+      }
       var res = await saveToHistory(predictionId);
       if (res != null) {
         return predictionId;
@@ -49,14 +50,15 @@ class PredictionApiService {
     }
   }
 
-  Future<void> savePersonalHealthMetrics(PredictionModel request) async {
+  Future<void> savePersonalHealthMetrics(
+      PredictionModel request, String id) async {
     SVProgressHUD.show();
     try {
       // Save  user details to Firestore
       await _firestore
           .collection(Constant.healthMetricTable)
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .set(request.toPersonalHealthMetricsJson());
+          .set(request.toPersonalHealthMetricsJson(id));
       SVProgressHUD.dismiss();
     } catch (e) {
       _showErrorAlert('$e');

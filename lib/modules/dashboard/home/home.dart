@@ -8,6 +8,7 @@ import 'package:sugar_smart_assist/helper/app_font_helper.dart';
 import 'package:sugar_smart_assist/helper/list_builder_extension.dart';
 import 'package:sugar_smart_assist/helper/local_auth_helper.dart';
 import 'package:sugar_smart_assist/models/health_metrics.dart';
+import 'package:sugar_smart_assist/models/suggestion.dart';
 import 'package:sugar_smart_assist/modules/dashboard/home/home_api.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -24,6 +25,7 @@ class _HomeScreenScreenState extends State<HomeScreen> {
   var _isInit = false;
   List<MetricItem> _metricItems = [];
   HealthMetrics? _healthMetrics;
+  SuggestionModel? _currentSuggestion;
 
   @override
   void initState() {
@@ -42,8 +44,21 @@ class _HomeScreenScreenState extends State<HomeScreen> {
     var res = await apiService.getUserHealthInformation();
     if (res != null) {
       _healthMetrics = res;
+      if (res.outcome == '1.0' || res.outcome == '1') {
+        _getCurrentSuggestion();
+      }
     }
     _setMetricItems();
+  }
+
+  void _getCurrentSuggestion() async {
+    var res =
+        await apiService.getSuggestion(_healthMetrics?.predictionId ?? '');
+    if (res != null) {
+      setState(() {
+        _currentSuggestion = res;
+      });
+    }
   }
 
   void _setMetricItems() async {
@@ -133,6 +148,9 @@ class _HomeScreenScreenState extends State<HomeScreen> {
         children: [
           getBorderLineView(),
           if (_healthMetrics == null) _getSuggestionBox(),
+          if (_currentSuggestion != null)
+            _getSuggestionBox(AppLocalizations.of(context)!.suggestionText,
+                _currentSuggestion?.suggestion),
           _getMetricListView(),
         ].withSpaceBetween(height: 12),
       ),
@@ -161,7 +179,7 @@ class _HomeScreenScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _getSuggestionBox() {
+  Widget _getSuggestionBox([String? title, String? body]) {
     return InkWell(
       onTap: () {
         Navigator.push(_getContext(), AppRouter().start(prediction));
@@ -170,14 +188,18 @@ class _HomeScreenScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(12.0),
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration: BoxDecoration(
-          color: AppColors.primaryColor,
+          color: _currentSuggestion == null
+              ? AppColors.primaryColor
+              : AppColors.failureColor,
           borderRadius: BorderRadius.circular(8.0),
           boxShadow: cardShadow(),
         ),
         child: Column(
           children: [
             Text(
-              AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertTitle,
+              title ??
+                  AppLocalizations.of(_getContext())!
+                      .notSetHealthMetricsAlertTitle,
               style: AppFonts.titleBoldTextStyle(
                 color: AppColors.textWhiteColor,
                 size: 20.0,
@@ -187,7 +209,9 @@ class _HomeScreenScreenState extends State<HomeScreen> {
               height: 15,
             ),
             Text(
-              AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertDesc,
+              body ??
+                  AppLocalizations.of(_getContext())!
+                      .notSetHealthMetricsAlertDesc,
               style: AppFonts.titleBoldTextStyle(
                 color: AppColors.textWhiteColor,
                 size: 16.0,
