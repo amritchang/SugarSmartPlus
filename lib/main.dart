@@ -50,6 +50,12 @@ class _MyAppState extends State<MyApp> {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(30.0), // Adjust the value as needed
+            ),
+          ),
           bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(
