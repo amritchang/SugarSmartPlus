@@ -198,6 +198,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       setState(() {
                                         selectedGender = text;
+                                        request.gender = text;
                                       });
                                     },
                                   ),
