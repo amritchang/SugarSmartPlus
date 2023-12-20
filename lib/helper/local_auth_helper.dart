@@ -4,6 +4,7 @@ import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool isBiometricAlertShown = false; // Add this flag
+bool isHealthMetricsAlertShown = false;
 
 class BiometricService {
   BuildContext context;

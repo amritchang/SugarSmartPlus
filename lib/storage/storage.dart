@@ -122,6 +122,7 @@ class Storage extends GetxController {
     GetStorage(StorageKey.refreshToken).erase();
     GetStorage(StorageKey.userProfileDetail).erase();
     isBiometricAlertShown = false;
+    isHealthMetricsAlertShown = false;
   }
 
   void removeBiometricLoginDetail() async {
