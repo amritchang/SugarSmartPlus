@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sugar_smart_assist/app_router/app_router.dart';
-import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:sugar_smart_assist/custom_views/navbar/dashboard_navbar.dart';
 import 'package:sugar_smart_assist/custom_views/border_view.dart';
+import 'package:sugar_smart_assist/custom_views/shadow.dart';
 import 'package:sugar_smart_assist/helper/app_color_helper.dart';
 import 'package:sugar_smart_assist/helper/app_font_helper.dart';
 import 'package:sugar_smart_assist/helper/list_builder_extension.dart';
 import 'package:sugar_smart_assist/helper/local_auth_helper.dart';
+import 'package:sugar_smart_assist/models/health_metrics.dart';
 import 'package:sugar_smart_assist/modules/dashboard/home/home_api.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:sugar_smart_assist/storage/storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenScreenState extends State<HomeScreen> {
   late HomeApiService apiService;
   var _isInit = false;
+  List<MetricItem> _metricItems = [];
+  HealthMetrics? _healthMetrics;
 
   @override
   void initState() {
@@ -37,16 +41,56 @@ class _HomeScreenScreenState extends State<HomeScreen> {
   void _getHealthMetrics() async {
     var res = await apiService.getUserHealthInformation();
     if (res != null) {
-    } else {
-      showAlertDialogWithOk(
-        AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertTitle,
-        AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertDesc,
-        _getContext(),
-        onOkPressed: () {
-          Navigator.push(_getContext(), AppRouter().start(prediction));
-        },
-      );
+      _healthMetrics = res;
     }
+    _setMetricItems();
+  }
+
+  void _setMetricItems() async {
+    var user = await Storage().getUser();
+    var isEmpty = _healthMetrics == null;
+    var isMale = user?.gender?.toLowerCase() == "male";
+    setState(() {
+      _metricItems = [
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.ageText,
+            value: isEmpty ? '?' : (_healthMetrics?.age ?? ""),
+            description: ''),
+        if (!isMale)
+          MetricItem(
+            label: AppLocalizations.of(_getContext())!.pregnanciesText,
+            value: isEmpty ? '?' : (_healthMetrics?.pregnancies ?? ""),
+            description: '',
+          ),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.glucoseText,
+            value: isEmpty ? '?' : (_healthMetrics?.glucose ?? ""),
+            description: 'mg/dL'),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.bloodPressureText,
+            value: isEmpty ? '?' : (_healthMetrics?.bloodpressure ?? ""),
+            description: 'mmHg'),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.skinnThicknessText,
+            value: isEmpty ? '?' : (_healthMetrics?.skinthickness ?? ""),
+            description: 'IU/mL'),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.insulinText,
+            value: isEmpty ? '?' : (_healthMetrics?.insulin ?? ""),
+            description: ''),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!
+                .diabetesPedigreeFunctionText,
+            value: isEmpty
+                ? '?'
+                : (_healthMetrics?.diabetesPedigreeFunction ?? ""),
+            description: 'kg/m^2'),
+        MetricItem(
+            label: AppLocalizations.of(_getContext())!.bmiText,
+            value: isEmpty ? '?' : (_healthMetrics?.bmi ?? ""),
+            description: '')
+      ];
+    });
   }
 
   BuildContext _getContext() {
@@ -62,87 +106,151 @@ class _HomeScreenScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DashboardAppNavBar(),
-      body: EasyRefresh.custom(
-        onRefresh: _refresh,
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [_buildBody()],
+      body: SafeArea(
+        minimum: const EdgeInsets.only(bottom: 110),
+        child: EasyRefresh.custom(
+          onRefresh: _refresh,
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [_buildBody()],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       backgroundColor: AppColors.primaryBackgroundColor,
     );
   }
 
   Widget _buildBody() {
+    if (_metricItems.isEmpty) {
+      _getHealthMetrics();
+    }
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20,
-          0), // if padding is changed, please change width of container in DashboardMainMenuView, _mainMenu
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Column(
-        children: [getBorderLineView(), _getMetricCardsView()]
-            .withSpaceBetween(height: 24),
+        children: [
+          getBorderLineView(),
+          if (_healthMetrics == null) _getSuggestionBox(),
+          _getMetricListView(),
+        ].withSpaceBetween(height: 12),
       ),
     );
   }
 
-  Widget _getMetricCardsView() {
-    return Column(
-      children: [
-        MetricCard(
-          title: 'Overview',
-          metrics: {
-            'Total Pregnancies': '5',
-            'Average Glucose Levels': '120 mg/dL',
-            'Average Blood Pressure': '120/80 mmHg',
-            'Average Skin Thickness': '20 mm',
-            'Average Insulin Levels': '15 units',
-            'Average BMI': '25.5',
-            'Average Diabetes Pedigree Function': '0.5',
-            'Average Age': '35',
-          },
+  Widget _getMetricListView() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+      ),
+      itemCount:
+          _metricItems.length, // Adjust based on the number of items you have
+      padding: const EdgeInsets.all(16.0),
+      itemBuilder: (context, index) {
+        return MetricItem(
+          label: _metricItems[index].label,
+          value: _metricItems[index].value,
+          description: _metricItems[index].description,
+        );
+      },
+    );
+  }
+
+  Widget _getSuggestionBox() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(_getContext(), AppRouter().start(prediction));
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        decoration: BoxDecoration(
+          color: AppColors.primaryColor,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: cardShadow(),
         ),
-      ],
+        child: Column(
+          children: [
+            Text(
+              AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertTitle,
+              style: AppFonts.titleBoldTextStyle(
+                color: AppColors.textWhiteColor,
+                size: 20.0,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+              AppLocalizations.of(_getContext())!.notSetHealthMetricsAlertDesc,
+              style: AppFonts.titleBoldTextStyle(
+                color: AppColors.textWhiteColor,
+                size: 16.0,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class MetricCard extends StatelessWidget {
-  final String title;
-  final Map<String, String> metrics;
-  final Widget? child;
+class MetricItem extends StatelessWidget {
+  final String label;
+  final String value;
+  final String description;
 
-  MetricCard({required this.title, required this.metrics, this.child});
+  MetricItem({
+    required this.label,
+    required this.value,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(16.0),
       elevation: 4.0,
+      color: AppColors.primaryBoxColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              width: 50.0,
+              height: 50.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.primaryColor,
+                boxShadow: cardShadow(), // Customize the color as needed
+              ),
+              child: Center(
+                child: Text(
+                  value,
+                  style:
+                      AppFonts.bodyTextStyle(color: AppColors.textWhiteColor),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8.0),
             Text(
-              title,
-              style:
-                  AppFonts.titleBoldTextStyle(color: AppColors.textBlackColor),
+              label,
+              textAlign: TextAlign.center,
+              style: AppFonts.titleBoldTextStyle(
+                  color: AppColors.textBlackColor, size: 14.0),
             ),
-            const SizedBox(height: 10.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: metrics.entries
-                  .map((entry) => Text(
-                        '${entry.key}: ${entry.value}',
-                        style: AppFonts.bodyTextStyle(
-                            color: AppColors.textBlackColor),
-                      ))
-                  .toList(),
+            const SizedBox(height: 4.0),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: AppFonts.bodyTextStyle(color: AppColors.textBlackColor),
             ),
-            const SizedBox(height: 10.0),
-            if (child != null) child!,
           ],
         ),
       ),
