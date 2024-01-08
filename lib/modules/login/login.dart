@@ -96,16 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.primaryColor,
         body: Stack(
           children: [
-            // Background Image
-            const Image(
-              image: AssetImage('assets/images/background.png'),
-              fit: BoxFit.fill,
-              height: double.infinity,
-              width: double.infinity,
-            ),
             SafeArea(
               child: SingleChildScrollView(
                 child: Align(
