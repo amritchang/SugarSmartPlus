@@ -86,8 +86,13 @@ class AppRouter {
         return const SignUpcreen();
 
       case login:
+        return LoginScreen(
+          shouldShowBackButton: true,
+        );
       case logout:
-        return const LoginScreen();
+        return LoginScreen(
+          shouldShowBackButton: false,
+        );
       case dashboardRoute:
         return const DashboardTabBar();
       case profile:

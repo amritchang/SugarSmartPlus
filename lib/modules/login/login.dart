@@ -14,8 +14,8 @@ import 'package:sugar_smart_assist/modules/login/login_api.dart';
 import 'package:sugar_smart_assist/storage/storage.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
+  LoginScreen({Key? key, this.shouldShowBackButton}) : super(key: key);
+  bool? shouldShowBackButton = false;
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -107,7 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10.0, 0),
-                        child: LoginScreenAppNavBar(),
+                        child: LoginScreenAppNavBar(
+                          shouldShowBackButton: widget.shouldShowBackButton,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(30, 0, 30.0, 0),
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               AppLocalizations.of(context)!.loginScreenSubTitle,
                               style: AppFonts.screenSubTitleTextStyle(
-                                  color: AppColors.textGreyColor),
+                                  color: AppColors.textWhiteColor),
                             ),
                           ),
                         ]),
@@ -149,101 +151,101 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(
                                   16.0, 50.0, 16.0, 40.0),
-                              child: Column(
-                                children: [
-                                  Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      children: [
-                                        AppTextField(
-                                          placeholder:
-                                              AppLocalizations.of(context)!
-                                                  .usernameText,
-                                          type: TextFieldType.username,
-                                          isSecure: false,
-                                          onTextChanged: (text) {
-                                            _setUsername(text);
-                                          },
-                                        ),
-                                        AppTextField(
-                                          placeholder:
-                                              AppLocalizations.of(context)!
-                                                  .passwordText,
-                                          type: TextFieldType.password,
-                                          isSecure: true,
-                                          onTextChanged: (text) {
-                                            _setPassword(text);
-                                          },
-                                        ),
-                                      ].withSpaceBetween(height: 20),
-                                    ),
-                                  ),
-                                  AppButton(
-                                    title: AppLocalizations.of(context)!
-                                        .loginButton,
-                                    onPressed: () {
-                                      _validate();
-                                    },
-                                    backgroundColor: AppColors.primaryColor,
-                                  ),
-                                  Visibility(
-                                    visible: true,
-                                    child: AppButton(
-                                      title: AppLocalizations.of(context)!
-                                          .signUpWithEmailButton,
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context, AppRouter().start(signUp));
-                                      },
-                                      titleColor: AppColors.textGreyColor,
-                                      backgroundColor: AppColors.themeWhite,
-                                      borderColor: AppColors.primaryColor,
-                                      iconName: 'profile.png',
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isBiometricEnabled,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _biometricLogin(
+                              child: Column(children: [
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      AppTextField(
+                                        placeholder:
                                             AppLocalizations.of(context)!
-                                                .authenticateToLoginText);
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          if (biobiometricType != null)
-                                            getTemplatedIconWithSize(
-                                                biobiometricType ==
-                                                        BiometricType
-                                                            .fingerprint
-                                                    ? 'finger_print.png'
-                                                    : 'face_id.png',
-                                                AppColors.primaryColor,
-                                                40,
-                                                40),
-                                          if (biobiometricType != null)
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .useBiometrictext,
-                                              style: AppFonts.bodyTextStyle(
-                                                  color:
-                                                      AppColors.textGreyColor),
-                                            )
-                                        ].withSpaceBetween(width: 4.0),
+                                                .usernameText,
+                                        type: TextFieldType.username,
+                                        isSecure: false,
+                                        onTextChanged: (text) {
+                                          _setUsername(text);
+                                        },
                                       ),
+                                      AppTextField(
+                                        placeholder:
+                                            AppLocalizations.of(context)!
+                                                .passwordText,
+                                        type: TextFieldType.password,
+                                        isSecure: true,
+                                        onTextChanged: (text) {
+                                          _setPassword(text);
+                                        },
+                                      ),
+                                    ].withSpaceBetween(height: 20),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                AppButton(
+                                  title:
+                                      AppLocalizations.of(context)!.loginButton,
+                                  onPressed: () {
+                                    _validate();
+                                  },
+                                  backgroundColor: AppColors.primaryColor,
+                                ),
+                                const SizedBox(height: 20),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .notRegisteredYetText,
+                                        style: AppFonts.buttonTitleStyle(
+                                            color: AppColors.textBlackColor),
+                                      ),
+                                      AppButton(
+                                        title: AppLocalizations.of(context)!
+                                            .registerNowText,
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              AppRouter().start(signUp));
+                                        },
+                                        titleColor: AppColors.primaryColor,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isBiometricEnabled,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _biometricLogin(
+                                          AppLocalizations.of(context)!
+                                              .authenticateToLoginText);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (biobiometricType != null)
+                                          getTemplatedIconWithSize(
+                                              biobiometricType ==
+                                                      BiometricType.fingerprint
+                                                  ? 'finger_print.png'
+                                                  : 'face_id.png',
+                                              AppColors.primaryColor,
+                                              40,
+                                              40),
+                                        if (biobiometricType != null)
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .useBiometrictext,
+                                            style: AppFonts.bodyTextStyle(
+                                                color: AppColors.textGreyColor),
+                                          )
+                                      ].withSpaceBetween(width: 4.0),
                                     ),
                                   ),
-                                  AppButton(
-                                    title: AppLocalizations.of(context)!
-                                        .forgetPasswordButton,
-                                    onPressed: () {},
-                                    titleColor: AppColors.primaryColor,
-                                    backgroundColor: Colors.transparent,
-                                  ),
-                                ].withSpaceBetween(height: 20),
-                              ),
+                                ),
+                              ]),
                             )),
                       ),
                     ],

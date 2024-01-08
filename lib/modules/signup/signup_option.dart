@@ -24,9 +24,16 @@ class _SignUpOptionScreenState extends State<SignUpOptionScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
+            // Background Image
+            const Image(
+              image: AssetImage('assets/images/background.png'),
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+            ),
             SafeArea(
               child: SingleChildScrollView(
                 child: Padding(

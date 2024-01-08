@@ -89,16 +89,10 @@ class _SignUpcreenState extends State<SignUpcreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.primaryColor,
         body: Stack(
           children: [
             // Background Image
-            const Image(
-              image: AssetImage('assets/images/background.png'),
-              fit: BoxFit.fill,
-              height: double.infinity,
-              width: double.infinity,
-            ),
             SafeArea(
               child: SingleChildScrollView(
                 child: Align(
@@ -107,7 +101,9 @@ class _SignUpcreenState extends State<SignUpcreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10.0, 0),
-                        child: LoginScreenAppNavBar(),
+                        child: LoginScreenAppNavBar(
+                          shouldShowBackButton: true,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(30, 0, 30.0, 0),
@@ -130,7 +126,7 @@ class _SignUpcreenState extends State<SignUpcreen> {
                               AppLocalizations.of(context)!
                                   .signUpScreenSubTitle,
                               style: AppFonts.screenSubTitleTextStyle(
-                                  color: AppColors.textGreyColor),
+                                  color: AppColors.textWhiteColor),
                             ),
                           ),
                         ]),

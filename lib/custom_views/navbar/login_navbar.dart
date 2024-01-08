@@ -6,9 +6,11 @@ import 'package:sugar_smart_assist/helper/app_font_helper.dart';
 
 class LoginScreenAppNavBar extends StatefulWidget
     implements PreferredSizeWidget {
-  LoginScreenAppNavBar({Key? key})
+  LoginScreenAppNavBar({Key? key, this.shouldShowBackButton})
       : preferredSize = Size.fromHeight(kToolbarHeight),
         super(key: key);
+
+  bool? shouldShowBackButton = false;
 
   @override
   final Size preferredSize; // default is 56.0
@@ -21,9 +23,22 @@ class _LoginScreenAppNavBarState extends State<LoginScreenAppNavBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text('Sugar Smart\nAssist',
-          style: AppFonts.titleBoldTextStyle(
-              color: AppColors.primaryColor, size: 24.0)),
+      title: Row(
+        children: [
+          if (widget.shouldShowBackButton == true)
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              color: AppColors.themeWhite,
+              onPressed: () {
+                // Navigate back to the previous screen when the back button is pressed.
+                Navigator.of(context).pop();
+              },
+            ),
+          Text('Sugar Smart\nAssist',
+              style: AppFonts.titleBoldTextStyle(
+                  color: AppColors.textWhiteColor, size: 24.0)),
+        ],
+      ),
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
