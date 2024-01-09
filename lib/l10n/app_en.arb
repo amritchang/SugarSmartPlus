@@ -67,7 +67,7 @@
     "profileScreenTitleText": "Profile",
     "profileSettingsText": "Settings",
     "changePasswordText": "Change Password",
-    "deleteUserText": "Delete User",
+    "deleteUserText": "Delete Profile",
     "logoutText": "Log Out",
 
     "changePasswordScreenSubtitle": "Enter a unique combination of  Password.",
