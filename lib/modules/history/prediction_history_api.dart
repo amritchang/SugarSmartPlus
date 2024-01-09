@@ -77,11 +77,11 @@ class PredictionnHistoryApiService {
 
         return model.suggestion;
       } else {
-        return null;
+        return '';
       }
     } catch (e) {
       _showErrorAlert('$e');
-      return null;
+      return '';
     }
   }
 

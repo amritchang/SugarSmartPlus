@@ -35,7 +35,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     suggestionText = widget.arguments.suggestionText;
     if (widget.arguments.predictionOutcome == '0.0' ||
         widget.arguments.predictionOutcome == '0') {
-      suggestionText = '';
+      suggestionText = null;
     }
   }
 
@@ -81,7 +81,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           children: <Widget>[
             _buildList(),
             const SizedBox(height: 20),
-            if (suggestionText == null)
+            if (suggestionText != null && (suggestionText ?? '').isEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: AppButton(

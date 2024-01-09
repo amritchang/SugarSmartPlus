@@ -45,7 +45,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   void _savePrediction() async {
     var res = await apiService.savePredictionResult(request, isUpdatePersonal);
     if (res != null) {
-      _navigateToDetailScreen(res, prediction);
+      _navigateToDetailScreen(res, request.outcome);
     }
   }
 
@@ -78,8 +78,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
       KeyValue(
           key: AppLocalizations.of(context)!.outcomeText,
           value: (request.outcome == '1.0' || request.outcome == '1')
-              ? 'Positive'
-              : 'Negative'),
+              ? 'Positive $outcome'
+              : 'Negative $outcome'),
     ];
 
     final args = ConfirmScreenArguments(
