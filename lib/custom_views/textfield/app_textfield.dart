@@ -42,6 +42,8 @@ class AppTextField extends StatefulWidget {
     this.dropdownType,
     this.onTap,
     this.controller,
+    this.minValue,
+    this.maxValue,
     Key? key,
   }) : super(key: key);
 
@@ -58,6 +60,8 @@ class AppTextField extends StatefulWidget {
   final DropDownType? dropdownType;
   final GestureTapCallback? onTap;
   final TextEditingController? controller;
+  final double? minValue;
+  final double? maxValue;
 
   @override
   _AppTextFieldState createState() => _AppTextFieldState();
@@ -115,6 +119,7 @@ class _AppTextFieldState extends State<AppTextField> {
         hintText: widget.placeholder,
         hintStyle: AppFonts.bodyTextStyle(color: AppColors.textGreyColor),
         prefixIcon: _getLeftButton(),
+        errorMaxLines: 3,
         suffixIcon: widget.suffixButtonText != null
             ? Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
@@ -279,6 +284,15 @@ class _AppTextFieldState extends State<AppTextField> {
         }
       default:
         {
+          double enteredValue = double.tryParse(value) ?? 0.0;
+
+          if (widget.minValue != null && enteredValue < widget.minValue!) {
+            return '${widget.placeholder} must be greater than ${widget.minValue}';
+          }
+
+          if (widget.maxValue != null && enteredValue > widget.maxValue!) {
+            return '${widget.placeholder} must be less than ${widget.maxValue}';
+          }
           return null;
         }
     }

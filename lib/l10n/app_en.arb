@@ -100,7 +100,7 @@
     "invalidEmailText": "Invalid Email Address",
     "invalidMpinText": "Invalid MPIN",
     "invalidConfirmPIN": "Invalid Confirm MPIN",
-    "invalidPasswordText": "Invalid Password",
+    "invalidPasswordText": "Invalid Password. Password must contain uppercase, lowercase, special character, numeric and at least 6 character long",
     "invalidConfirmPassword": "Invalid Confirm Password",
     "pleaseAgreeTermsandConditionText": "Please agree terms and conditions.",
     "somethingWentWrongText": "Something went wrong, please try again.",

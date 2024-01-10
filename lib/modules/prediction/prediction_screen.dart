@@ -217,6 +217,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                           onTextChanged: (text) {
                                             request.pregnancies = text;
                                           },
+                                          minValue: 0,
+                                          maxValue: 17,
                                         ),
                                         const SizedBox(height: 20),
                                       ],
@@ -229,6 +231,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.glucose = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 199,
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
@@ -238,6 +242,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.bloodpressure = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 122,
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
@@ -247,6 +253,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.skinthickness = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 99,
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
@@ -256,6 +264,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.insulin = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 846,
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
@@ -265,6 +275,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.diabetesPedigreeFunction = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 2.42,
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
@@ -274,6 +286,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     onTextChanged: (text) {
                                       request.bmi = text;
                                     },
+                                    minValue: 0,
+                                    maxValue: 67.1,
                                   ),
                                 ]),
                               ),
