@@ -2,19 +2,6 @@
 
 Brief description of your Flutter project.
 
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [Prerequisites](#prerequisites)
-3. [Getting Started](#getting-started)
-   - [Installation](#installation)
-   - [Configuration](#configuration)
-4. [Usage](#usage)
-5. [Folder Structure](#folder-structure)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Acknowledgements](#acknowledgements)
-
 ## Introduction
 
 SugarSmart stands ready to overcome such divisions through an elegantly designed mobile platform. "SugarSmart Assist" aims to rewrite this all-too-common narrative by enabling users to assess their personal diabetes risk based on key health measures they provide themselves.
