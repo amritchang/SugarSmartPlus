@@ -143,5 +143,6 @@
     "notSetHealthMetricsAlertTitle": "Set your Health Metrics",
     "notSetHealthMetricsAlertDesc" : "You have not set your health metrics, please make a first prediction and don't forget to click on Update Health Metrics Checkbox!",
     "registerNowText": "Register Now",
-    "notRegisteredYetText": "Not Registered Yet?"
+    "notRegisteredYetText": "Not Registered Yet?",
+    "chanceToDiabetesText": "Chance of Diabetes"
 }

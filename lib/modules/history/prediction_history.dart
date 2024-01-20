@@ -114,22 +114,30 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
             value: (request.outcome == '1.0' || request.outcome == '1')
                 ? 'Positive'
                 : 'Negative'),
+        KeyValue(
+            key: AppLocalizations.of(context)!.chanceToDiabetesText,
+            value: (request.outcome == '1.0' || request.outcome == '1')
+                ? ''
+                : request.timeToDiabetes),
       ];
 
-      final args = ConfirmScreenArguments(
-        AppLocalizations.of(_getContext())!.predictionScreenTitle,
-        data
-            .where((item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
-            .toList(),
-        model.predictionId ?? '',
-        request.outcome,
-        request,
-        (request.outcome == '1.0' || request.outcome == '1')
-            ? await apiService.getSuggestion(model.predictionId ?? '')
-            : null,
-        ConfirmScreenType.none,
-      );
-      Navigator.push(_getContext(), AppRouter().start(confirmScreen, args));
+      var suggestion = await apiService.getSuggestion(model.predictionId ?? '');
+
+      if (suggestion != null) {
+        final args = ConfirmScreenArguments(
+          AppLocalizations.of(_getContext())!.predictionScreenTitle,
+          data
+              .where(
+                  (item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
+              .toList(),
+          model.predictionId ?? '',
+          request.outcome,
+          request,
+          suggestion ?? '',
+          ConfirmScreenType.none,
+        );
+        Navigator.push(_getContext(), AppRouter().start(confirmScreen, args));
+      }
     }
   }
 

@@ -44,9 +44,7 @@ class _HomeScreenScreenState extends State<HomeScreen> {
     var res = await apiService.getUserHealthInformation();
     if (res != null) {
       _healthMetrics = res;
-      if (res.outcome == '1.0' || res.outcome == '1') {
-        _getCurrentSuggestion();
-      }
+      _getCurrentSuggestion();
     }
     _setMetricItems();
   }
@@ -273,7 +271,8 @@ class MetricItem extends StatelessWidget {
             Text(
               description,
               textAlign: TextAlign.center,
-              style: AppFonts.bodyTextStyle(color: AppColors.textBlackColor),
+              style: AppFonts.bodyTextStyle(
+                  color: AppColors.textBlackColor, size: 12.0),
             ),
           ],
         ),

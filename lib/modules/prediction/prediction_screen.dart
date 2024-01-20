@@ -22,7 +22,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
   final _formKey = GlobalKey<FormState>();
   String selectedGender = '';
   PredictionModel request = PredictionModel();
-  bool isUpdatePersonal = false;
+  bool isUpdatePersonal = true;
 
   late PredictionApiService apiService;
 
@@ -36,7 +36,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
     if (_formKey.currentState!.validate()) {
       var res = await apiService.makeApiCall(request);
       if (res != null) {
-        request.outcome = res;
+        request.outcome = res.prediction;
+        request.timeToDiabetes = res.estimatedTimeToDiabetes;
+        request.suggestion = res.suggestions;
         _savePrediction();
       }
     }
@@ -49,7 +51,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
     }
   }
 
-  void _navigateToDetailScreen(String id, String outcome) {
+  void _navigateToDetailScreen(String id, String outcome) async {
     List<KeyValue> data = [
       KeyValue(key: AppLocalizations.of(context)!.ageText, value: request.age),
       KeyValue(
@@ -78,22 +80,31 @@ class _PredictionScreenState extends State<PredictionScreen> {
       KeyValue(
           key: AppLocalizations.of(context)!.outcomeText,
           value: (request.outcome == '1.0' || request.outcome == '1')
-              ? 'Positive $outcome'
-              : 'Negative $outcome'),
+              ? 'Positive'
+              : 'Negative'),
+      KeyValue(
+          key: AppLocalizations.of(context)!.chanceToDiabetesText,
+          value: (request.outcome == '1.0' || request.outcome == '1')
+              ? ''
+              : request.timeToDiabetes),
     ];
 
     final args = ConfirmScreenArguments(
-      AppLocalizations.of(context)!.predictionScreenTitle,
+      AppLocalizations.of(_getContext())!.predictionScreenTitle,
       data
           .where((item) => (item.value.isNotEmpty || item.childs.isNotEmpty))
           .toList(),
       id,
       outcome,
       request,
-      (request.outcome == '1.0' || request.outcome == '1') ? '' : null,
+      await apiService.getSuggestion(id),
       ConfirmScreenType.detail,
     );
     Navigator.push(context, AppRouter().start(confirmScreen, args));
+  }
+
+  BuildContext _getContext() {
+    return context;
   }
 
   @override

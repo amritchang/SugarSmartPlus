@@ -11,6 +11,8 @@ class PredictionModel {
   String age;
   String diabetesPedigreeFunction;
   String outcome;
+  String timeToDiabetes;
+  String suggestion;
 
   // Constructor with default values
   PredictionModel({
@@ -24,6 +26,8 @@ class PredictionModel {
     this.age = '0',
     this.diabetesPedigreeFunction = '0',
     this.outcome = '0',
+    this.timeToDiabetes = '0',
+    this.suggestion = '',
   });
 
 // Create a method to convert the object to JSON
@@ -40,6 +44,7 @@ class PredictionModel {
       'age': age,
       'diabetesPedigreeFunction': diabetesPedigreeFunction,
       'outcome': outcome,
+      'timeToDiabetes': timeToDiabetes,
     };
 
     return jsonMap;
@@ -58,6 +63,7 @@ class PredictionModel {
       'age': age,
       'diabetesPedigreeFunction': diabetesPedigreeFunction,
       'outcome': outcome,
+      'timeToDiabetes': timeToDiabetes,
     };
 
     return jsonMap;

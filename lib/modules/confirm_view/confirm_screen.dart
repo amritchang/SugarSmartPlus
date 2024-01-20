@@ -33,10 +33,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     apiService = ConfirmScreenApiService(context: context);
     chatGptApiService = ChatGPTApiService(context: context);
     suggestionText = widget.arguments.suggestionText;
-    if (widget.arguments.predictionOutcome == '0.0' ||
-        widget.arguments.predictionOutcome == '0') {
-      suggestionText = null;
-    }
   }
 
   @override
@@ -130,17 +126,18 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 ),
               ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: AppButton(
-                title: AppLocalizations.of(context)!.goBackToDashboardText,
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context, AppRouter().start(dashboardRoute));
-                },
-                backgroundColor: AppColors.primaryColor,
+            if (widget.arguments.type != ConfirmScreenType.none)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: AppButton(
+                  title: AppLocalizations.of(context)!.goBackToDashboardText,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context, AppRouter().start(dashboardRoute));
+                  },
+                  backgroundColor: AppColors.primaryColor,
+                ),
               ),
-            ),
           ],
         ),
       ),

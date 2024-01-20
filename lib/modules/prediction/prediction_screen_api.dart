@@ -5,10 +5,12 @@ import 'package:flutter_svprogresshud/flutter_svprogresshud.dart';
 import 'package:sugar_smart_assist/app_url/app_url.dart';
 import 'package:sugar_smart_assist/custom_views/alert/alert_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sugar_smart_assist/models/suggestion.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sugar_smart_assist/modules/prediction/prediction_response.dart';
 
 class PredictionApiService {
   BuildContext context;
@@ -37,8 +39,9 @@ class PredictionApiService {
       if (shouldUpdatePersonalHealthMetric) {
         await savePersonalHealthMetrics(request, predictionId);
       }
-      var res = await saveToHistory(predictionId);
-      if (res != null) {
+      var suggestion = await saveToSuggestion(predictionId, request.suggestion);
+      var history = await saveToHistory(predictionId);
+      if (suggestion != null && history != null) {
         return predictionId;
       } else {
         return null;
@@ -47,6 +50,29 @@ class PredictionApiService {
       _showErrorAlert('$e');
       SVProgressHUD.dismiss();
       return null;
+    }
+  }
+
+  Future<String?> getSuggestion(String predictionId) async {
+    try {
+      QuerySnapshot query = await FirebaseFirestore.instance
+          .collection(Constant.suggestionTable)
+          .where('predictionId', isEqualTo: predictionId)
+          .get();
+
+      if (query.docs.isNotEmpty && query.docs.first.data() != null) {
+        Map<String, dynamic>? suggestionJson =
+            query.docs.first.data() as Map<String, dynamic>;
+
+        var model = SuggestionModel.fromJson(suggestionJson);
+
+        return model.suggestion;
+      } else {
+        return '';
+      }
+    } catch (e) {
+      _showErrorAlert('$e');
+      return '';
     }
   }
 
@@ -89,18 +115,18 @@ class PredictionApiService {
     }
   }
 
-  Future<String?> makeApiCall(PredictionModel model) async {
+  Future<PredictionModelResponse?> makeApiCall(PredictionModel model) async {
     SVProgressHUD.show();
     // Replace these values with your input parameters
     Map<String, dynamic> inputData = {
-      'Pregnancies': model.pregnancies,
-      'Glucose': model.glucose,
-      'BloodPressure': model.bloodpressure,
-      'SkinThickness': model.skinthickness,
-      'Insulin': model.insulin,
-      'BMI': model.bmi,
-      'DiabetesPedigreeFunction': model.diabetesPedigreeFunction,
-      'Age': model.age,
+      'Pregnancies': int.parse(model.pregnancies),
+      'Glucose': double.parse(model.glucose),
+      'BloodPressure': double.parse(model.bloodpressure),
+      'SkinThickness': double.parse(model.skinthickness),
+      'Insulin': double.parse(model.insulin),
+      'BMI': double.parse(model.bmi),
+      'DiabetesPedigreeFunction': double.parse(model.diabetesPedigreeFunction),
+      'Age': int.parse(model.age),
     };
 
     try {
@@ -111,19 +137,42 @@ class PredictionApiService {
         },
         body: jsonEncode(inputData),
       );
-
       if (response.statusCode == 200) {
         Map<String, dynamic> result = jsonDecode(response.body);
         SVProgressHUD.dismiss();
-        return '${result['prediction']}';
+        return PredictionModelResponse.fromJson(result);
       } else {
         _showErrorAlert(
-            'Failed to make a prediction. Error code: ${response.statusCode}');
+            'Failed to make a prediction. Error code: ${response.statusCode} ${response.body}');
         SVProgressHUD.dismiss();
         return null;
       }
     } catch (e) {
       _showErrorAlert('Error making API call: $e');
+      SVProgressHUD.dismiss();
+      return null;
+    }
+  }
+
+  Future<bool?> saveToSuggestion(String predictionId, String suggestion) async {
+    SVProgressHUD.show();
+    Map<String, dynamic> jsonMap = {
+      'userId': FirebaseAuth.instance.currentUser?.uid,
+      'predictionId': predictionId,
+      'question': '',
+      'suggestion': suggestion
+    };
+
+    try {
+      CollectionReference predictionsCollection =
+          _firestore.collection(Constant.suggestionTable);
+
+      await predictionsCollection.add(jsonMap);
+
+      SVProgressHUD.dismiss();
+      return true;
+    } catch (e) {
+      _showErrorAlert('$e');
       SVProgressHUD.dismiss();
       return null;
     }
