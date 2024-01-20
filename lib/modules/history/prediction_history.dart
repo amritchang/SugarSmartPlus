@@ -118,7 +118,7 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
             key: AppLocalizations.of(context)!.chanceToDiabetesText,
             value: (request.outcome == '1.0' || request.outcome == '1')
                 ? ''
-                : request.timeToDiabetes),
+                : '${(double.parse(request.timeToDiabetes) * 100).toStringAsFixed(0)} %'),
       ];
 
       var suggestion = await apiService.getSuggestion(model.predictionId ?? '');
@@ -133,7 +133,7 @@ class _PredictionHistoryScreenState extends State<PredictionHistoryScreen> {
           model.predictionId ?? '',
           request.outcome,
           request,
-          suggestion ?? '',
+          suggestion,
           ConfirmScreenType.none,
         );
         Navigator.push(_getContext(), AppRouter().start(confirmScreen, args));

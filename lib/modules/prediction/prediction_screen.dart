@@ -86,7 +86,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
           key: AppLocalizations.of(context)!.chanceToDiabetesText,
           value: (request.outcome == '1.0' || request.outcome == '1')
               ? ''
-              : request.timeToDiabetes),
+              : '${(double.parse(request.timeToDiabetes) * 100).toStringAsFixed(0)} %'),
     ];
 
     final args = ConfirmScreenArguments(

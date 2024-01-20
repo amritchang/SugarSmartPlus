@@ -80,6 +80,7 @@ class PredictionModel {
       bmi: json['bmi'],
       age: json['age'],
       outcome: json['outcome'],
+      timeToDiabetes: json['timeToDiabetes'] ?? '0',
     );
   }
 }
