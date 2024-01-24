@@ -1,6 +1,6 @@
 # sugar_smart_assist
 
-Brief description of your Flutter project.
+SugarSmart stands ready to overcome such divisions through an elegantly designed mobile platform. "SugarSmart Assist" aims to rewrite this all-too-common narrative by enabling users to assess their personal diabetes risk based on key health measures they provide themselves.
 
 ## Introduction
 
