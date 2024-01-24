@@ -6,9 +6,11 @@ Brief description of your Flutter project.
 
 SugarSmart stands ready to overcome such divisions through an elegantly designed mobile platform. "SugarSmart Assist" aims to rewrite this all-too-common narrative by enabling users to assess their personal diabetes risk based on key health measures they provide themselves.
 
-## Before you move on to the Project, make sure you are ready for your first Flutter APP
 A few resources to get you started if this is your first Flutter project:
 
+- [Flutter: Installation](https://docs.flutter.dev/get-started/install)
+- [Flutter Installation Windows](https://docs.flutter.dev/get-started/install/windows)
+- [Flutter Installation Mac](https://docs.flutter.dev/get-started/install/macos)
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
