@@ -6,6 +6,7 @@ import 'package:sugar_smart_assist/modules/confirm_view/confirm_screen_arguments
 import 'package:sugar_smart_assist/modules/dropdown/dropdown_screen.dart';
 import 'package:sugar_smart_assist/modules/dropdown/dropdown_screen_arguments.dart';
 import 'package:sugar_smart_assist/modules/language_selection/language_change.dart';
+import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_screen.dart';
 import 'package:sugar_smart_assist/modules/text_detail/text_detail_screen.dart';
 import 'package:sugar_smart_assist/modules/text_detail/text_detail_screen_arguments.dart';
@@ -112,7 +113,10 @@ class AppRouter {
       case changePassword:
         return const ChangePasswordScreen();
       case prediction:
-        return const PredictionScreen();
+        if (arguments == null) {
+          return PredictionScreen();
+        }
+        return PredictionScreen(healthReq: arguments as PredictionModel);
       default:
         break;
     }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sugar_smart_assist/models/health_metrics.dart';
 
 class PredictionModel {
   String gender;
@@ -16,17 +17,17 @@ class PredictionModel {
 
   // Constructor with default values
   PredictionModel({
-    this.pregnancies = '0',
+    this.pregnancies = '',
     this.gender = '',
-    this.glucose = '0',
-    this.bloodpressure = '0',
-    this.skinthickness = '0',
-    this.insulin = '0',
-    this.bmi = '0',
-    this.age = '0',
-    this.diabetesPedigreeFunction = '0',
-    this.outcome = '0',
-    this.timeToDiabetes = '0',
+    this.glucose = '',
+    this.bloodpressure = '',
+    this.skinthickness = '',
+    this.insulin = '',
+    this.bmi = '',
+    this.age = '',
+    this.diabetesPedigreeFunction = '',
+    this.outcome = '',
+    this.timeToDiabetes = '',
     this.suggestion = '',
   });
 
@@ -81,6 +82,23 @@ class PredictionModel {
       age: json['age'],
       outcome: json['outcome'],
       timeToDiabetes: json['timeToDiabetes'] ?? '0',
+    );
+  }
+
+  factory PredictionModel.fromHelthMetrics(
+      HealthMetrics healthmetrics, String gender) {
+    return PredictionModel(
+      pregnancies: healthmetrics.pregnancies,
+      gender: gender,
+      glucose: healthmetrics.glucose,
+      bloodpressure: healthmetrics.bloodpressure,
+      skinthickness: healthmetrics.skinthickness,
+      insulin: healthmetrics.insulin,
+      bmi: healthmetrics.bmi,
+      age: healthmetrics.age,
+      diabetesPedigreeFunction: healthmetrics.diabetesPedigreeFunction,
+      outcome: healthmetrics.outcome,
+      timeToDiabetes: '0',
     );
   }
 }

@@ -13,7 +13,10 @@ import 'package:sugar_smart_assist/modules/prediction/prediction_request.dart';
 import 'package:sugar_smart_assist/modules/prediction/prediction_screen_api.dart';
 
 class PredictionScreen extends StatefulWidget {
-  const PredictionScreen({Key? key}) : super(key: key);
+  PredictionScreen({Key? key, this.healthReq}) : super(key: key);
+
+  PredictionModel? healthReq;
+
   @override
   _PredictionScreenState createState() => _PredictionScreenState();
 }
@@ -30,6 +33,11 @@ class _PredictionScreenState extends State<PredictionScreen> {
   void initState() {
     super.initState();
     apiService = PredictionApiService(context: context);
+    if (widget.healthReq != null) {
+      setState(() {
+        request = widget.healthReq!;
+      });
+    }
   }
 
   Future _predictDiabetes() async {
@@ -177,6 +185,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder:
                                         AppLocalizations.of(context)!.ageText,
+                                    preText: request.age,
                                     type: TextFieldType.numberpad,
                                     onTextChanged: (text) {
                                       request.age = text;
@@ -184,6 +193,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
+                                    preText: request.gender,
                                     placeholder: AppLocalizations.of(context)!
                                         .genderText,
                                     type: TextFieldType.dropdown,
@@ -207,10 +217,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     ],
                                     dropdownType: DropDownType.none,
                                     onTextChanged: (text) {
-                                      setState(() {
-                                        selectedGender = text;
-                                        request.gender = text;
-                                      });
+                                      selectedGender = text;
+                                      request.gender = text;
                                     },
                                   ),
                                   const SizedBox(height: 20),
@@ -225,6 +233,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                               AppLocalizations.of(context)!
                                                   .pregnanciesText,
                                           type: TextFieldType.numberpad,
+                                          preText: request.pregnancies,
                                           onTextChanged: (text) {
                                             request.pregnancies = text;
                                           },
@@ -239,6 +248,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     placeholder: AppLocalizations.of(context)!
                                         .glucoseText,
                                     type: TextFieldType.numberpad,
+                                    preText: request.glucose,
                                     onTextChanged: (text) {
                                       request.glucose = text;
                                     },
@@ -249,6 +259,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder: AppLocalizations.of(context)!
                                         .bloodPressureText,
+                                    preText: request.bloodpressure,
                                     type: TextFieldType.numberpad,
                                     onTextChanged: (text) {
                                       request.bloodpressure = text;
@@ -260,6 +271,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder: AppLocalizations.of(context)!
                                         .skinnThicknessText,
+                                    preText: request.skinthickness,
                                     type: TextFieldType.numberpad,
                                     onTextChanged: (text) {
                                       request.skinthickness = text;
@@ -271,6 +283,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder: AppLocalizations.of(context)!
                                         .insulinText,
+                                    preText: request.insulin,
                                     type: TextFieldType.numberpad,
                                     onTextChanged: (text) {
                                       request.insulin = text;
@@ -280,6 +293,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                   AppTextField(
+                                    preText: request.diabetesPedigreeFunction,
                                     placeholder: AppLocalizations.of(context)!
                                         .diabetesPedigreeFunctionText,
                                     type: TextFieldType.numberpadWithDecimal,
@@ -293,6 +307,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                   AppTextField(
                                     placeholder:
                                         AppLocalizations.of(context)!.bmiText,
+                                    preText: request.bmi,
                                     type: TextFieldType.numberpadWithDecimal,
                                     onTextChanged: (text) {
                                       request.bmi = text;
