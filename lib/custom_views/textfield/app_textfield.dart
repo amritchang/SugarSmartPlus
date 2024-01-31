@@ -91,7 +91,9 @@ class _AppTextFieldState extends State<AppTextField> {
   void _setUpInitialPreText() {
     if ((widget.preText ?? '').isNotEmpty) {
       controller.text = widget.preText ?? '';
-      widget.onTextChanged(widget.preText ?? '');
+      if (widget.type != TextFieldType.dropdown) {
+        widget.onTextChanged(widget.preText ?? '');
+      }
     }
   }
 

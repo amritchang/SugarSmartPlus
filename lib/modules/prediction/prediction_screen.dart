@@ -36,6 +36,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
     if (widget.healthReq != null) {
       setState(() {
         request = widget.healthReq!;
+        selectedGender = request.gender;
       });
     }
   }
@@ -220,8 +221,10 @@ class _PredictionScreenState extends State<PredictionScreen> {
                                     ],
                                     dropdownType: DropDownType.none,
                                     onTextChanged: (text) {
-                                      selectedGender = text;
-                                      request.gender = text;
+                                      setState(() {
+                                        selectedGender = text;
+                                        request.gender = text;
+                                      });
                                     },
                                   ),
                                   const SizedBox(height: 20),
