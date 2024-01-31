@@ -42,6 +42,9 @@ class _PredictionScreenState extends State<PredictionScreen> {
 
   Future _predictDiabetes() async {
     if (_formKey.currentState!.validate()) {
+      if (request.gender == AppLocalizations.of(_getContext())!.maleText) {
+        request.pregnancies = '0';
+      }
       var res = await apiService.makeApiCall(request);
       if (res != null) {
         request.outcome = res.prediction;

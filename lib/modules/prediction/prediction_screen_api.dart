@@ -129,6 +129,8 @@ class PredictionApiService {
       'Age': int.parse(model.age),
     };
 
+    print(inputData);
+
     try {
       final response = await http.post(
         Uri.parse(Constant.predictionModelUrl),
